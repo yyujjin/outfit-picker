@@ -9,12 +9,27 @@ import (
 type item struct {
 	ItemId   int    `json:"itemId"`
 	ItemName string `json:"itemName"`
-	Category string `json:"category"`
+	Category int `json:"category"`
 	Image    string `json:"image"`
 }
 
 var myCloset []item
 var itemId = 1
+
+type category struct {
+	id int
+	name string
+}  
+
+var categoryList = []category{
+	{1,"아우터"},
+	{2,"상의"},
+	{3,"하의"},
+	{4,"신발"},
+	{5,"가방"},
+	{6,"악세서리"},
+}
+
 
 func main() {
 	r := gin.Default()
@@ -40,9 +55,16 @@ func main() {
 			"message": "Clothing item successfully registered.",
 			"data": addItem,
 		})
-		
+
 		itemId++
 		
 	})
+
+	r.GET("/myCloset", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"data": myCloset,
+		})
+	})
+
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
