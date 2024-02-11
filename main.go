@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/samber/lo"
 	"net/http"
 	"strconv"
 )
@@ -75,6 +76,23 @@ func main() {
 			})
 			return
 		}
+		item, index, ok := lo.FindIndexOf(myCloset, func(item item) bool {
+			return item.ItemId == id
+		})
+
+		if ok == true {
+			myCloset = append(myCloset[:index], myCloset[index+1:]...)
+			c.IndentedJSON(http.StatusOK, item)
+			return
+		} else {
+			c.JSON(http.StatusNotFound, gin.H{
+				"data": "id를 찾을 수 없습니다.",
+			})
+		}
+		// 1. index 만 먼저 찾아
+		// 2. index가 없다면 에러 응답
+		// 3. ok 응답
+
 		for index, item := range myCloset {
 			if item.ItemId == id {
 				myCloset = append(myCloset[:index], myCloset[index+1:]...)
