@@ -3,11 +3,13 @@ POST http://localhost:8080/addToMyCloset
 Content-Type: application/json
 
 {
-    "itemaI": 123,
     "itemName": "12",
     "category":1, 
     "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
 }
 
 ###
-GET http://localhost:8080/myCloset 
+GET http://localhost:8080/myCloset
+
+###
+DELETE http://localhost:8080/removeItem/1
