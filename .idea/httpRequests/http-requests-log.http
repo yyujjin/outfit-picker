@@ -1,0 +1,133 @@
+GET http://localhost:8080/myCloset
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T165554.200.json
+
+###
+
+DELETE http://localhost:8080/removeItem/1
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T165549.200.json
+
+###
+
+DELETE http://localhost:8080/removeItem/0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T165544.404.json
+
+###
+
+POST http://localhost:8080/addToMyCloset
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-11T165536.200.json
+
+###
+
+GET http://localhost:8080/myCloset
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T165440.200.json
+
+###
+
+GET http://localhost:8080/myCloset
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T161637.200.json
+
+###
+
+DELETE http://localhost:8080/removeItem/1
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T161631.200.json
+
+###
+
+DELETE http://localhost:8080/removeItem/0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T161625.404.json
+
+###
+
+DELETE http://localhost:8080/removeItem/?id=0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T161539.404.txt
+
+###
+
+GET http://localhost:8080/myCloset
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-11T161504.200.json
+
+###
+
+POST http://localhost:8080/addToMyCloset
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-11T161458.200.json
+
+###
+
+POST http://localhost:8080/addToMyCloset
+Content-Type: application/json
+Content-Length: 137
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemaI": 123,
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-11T161310.200.json
+
+###
+
