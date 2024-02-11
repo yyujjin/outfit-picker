@@ -8,14 +8,21 @@ import (
 	"strconv"
 )
 
-type item struct {
+type postItem struct {
 	ItemId   int    `json:"itemId"`
 	ItemName string `json:"itemName"`
 	Category int    `json:"category"`
 	Image    string `json:"image"`
 }
 
-var myCloset []item
+type getItem struct {
+	ItemId   int    `json:"itemId"`
+	ItemName string `json:"itemName"`
+	Category string `json:"category"`
+	Image    string `json:"image"`
+}
+
+var myCloset []postItem
 var itemId = 1
 
 type category struct {
@@ -36,7 +43,7 @@ func main() {
 	r := gin.Default()
 
 	r.POST("/addToMyCloset", func(c *gin.Context) {
-		var addItem item
+		var addItem postItem
 		// item -> itemId 값을 넣어주고, itemID를 1 증가시켜
 		if err := c.BindJSON(&addItem); err != nil {
 			fmt.Println(err)
@@ -61,8 +68,26 @@ func main() {
 	})
 
 	r.GET("/myCloset", func(c *gin.Context) {
+		fmt.Println(myCloset)
+		getItemArr := []getItem{}
+		for _, value := range myCloset {
+
+			var categoryName string
+			for _, categoryValue := range categoryList {
+				if value.Category == categoryValue.id {
+					categoryName = categoryValue.name
+				}
+			}
+
+			getItemArr = append(getItemArr, getItem{
+				ItemId:   value.ItemId,
+				ItemName: value.ItemName,
+				Category: categoryName,
+				Image:    value.Image,
+			})
+		}
 		c.IndentedJSON(http.StatusOK, gin.H{
-			"data": myCloset,
+			"data": getItemArr,
 		})
 	})
 
@@ -76,7 +101,7 @@ func main() {
 			})
 			return
 		}
-		item, index, ok := lo.FindIndexOf(myCloset, func(item item) bool {
+		item, index, ok := lo.FindIndexOf(myCloset, func(item postItem) bool {
 			return item.ItemId == id
 		})
 
@@ -93,5 +118,3 @@ func main() {
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
-
-//옷장 아이템 삭제, 조회 API 만들기
