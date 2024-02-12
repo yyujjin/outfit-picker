@@ -32,8 +32,8 @@ var categoryList = []category{
 	{6, "악세서리"},
 }
 
-func findIndex(request int,a []int)int{
-	for index,value := range a {
+func findIndex(request int, a []int) int {
+	for index, value := range a {
 		if value == request {
 			return index
 		}
@@ -44,14 +44,11 @@ func findIndex(request int,a []int)int{
 func main() {
 	r := gin.Default()
 
-
-
 	r.GET("/practice", func(c *gin.Context) {
 		var request = 3
-		var a = []int {
-			1,2,3,4,5,
+		var a = []int{
+			1, 2, 3, 4, 5,
 		}
-
 
 		foundValue, foundIndex, ok := lo.FindIndexOf(a, func(value int) bool {
 			fmt.Println(value)
@@ -59,10 +56,9 @@ func main() {
 		})
 		fmt.Println(foundValue, foundIndex, ok)
 		c.JSON(http.StatusOK, gin.H{
-			"index": foundIndex,//findIndex(request,a),
+			"index": foundIndex, //findIndex(request,a),
 		})
 	})
-
 
 	r.POST("/addToMyCloset", func(c *gin.Context) {
 		var addItem item
@@ -90,8 +86,31 @@ func main() {
 	})
 
 	r.GET("/myCloset", func(c *gin.Context) {
+		type getItem struct {
+			ItemId   int    `json:"itemId"`
+			ItemName string `json:"itemName"`
+			Category string `json:"category"`
+			Image    string `json:"image"`
+		}
+		sendMyCloset := []getItem{}
+		for _, value := range myCloset {
+			fmt.Println(value)
+			var a string
+			for _, categoryValue := range categoryList {
+				if value.Category == categoryValue.id {
+					a = categoryValue.name
+				}
+			}
+			sendMyCloset = append(sendMyCloset, getItem{
+				value.ItemId,
+				value.ItemName,
+				a,
+				value.Image,
+			})
+		}
+
 		c.IndentedJSON(http.StatusOK, gin.H{
-			"data": myCloset,
+			"data": sendMyCloset,
 		})
 	})
 
