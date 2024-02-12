@@ -95,16 +95,15 @@ func main() {
 		sendMyCloset := []getItem{}
 		for _, value := range myCloset {
 			fmt.Println(value)
-			var a string
-			for _, categoryValue := range categoryList {
-				if value.Category == categoryValue.id {
-					a = categoryValue.name
-				}
-			}
+			// find로 value.category와 id가 같은 categoryList의 요소를 찾아서 변수에 저장. 변수에는 categoryList 요소가 담겨야 함.
+			str, _ := lo.Find(categoryList, func(c category) bool {
+				return value.Category == c.id
+			})
+
 			sendMyCloset = append(sendMyCloset, getItem{
 				value.ItemId,
 				value.ItemName,
-				a,
+				str.name,
 				value.Image,
 			})
 		}
