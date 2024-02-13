@@ -42,7 +42,7 @@ var categoryList = []category{
 func main() {
 	r := gin.Default()
 
-	r.POST("/addToMyCloset", func(c *gin.Context) {
+	r.POST("/items", func(c *gin.Context) {
 		var addItem postItem
 		// item -> itemId 값을 넣어주고, itemID를 1 증가시켜
 		if err := c.BindJSON(&addItem); err != nil {
@@ -67,7 +67,7 @@ func main() {
 		itemId++
 	})
 
-	r.GET("/myCloset", func(c *gin.Context) {
+	r.GET("/items", func(c *gin.Context) {
 		fmt.Println(myCloset)
 		getItemArr := []getItem{}
 		for _, value := range myCloset {
@@ -91,7 +91,11 @@ func main() {
 		})
 	})
 
-	r.DELETE("/removeItem/:id", func(c *gin.Context) {
+	//type intArray []int // 	별명만들기
+	//
+	//var a = []int{1, 2, 3}
+	//var a = intArray{1, 2, 3}
+	r.DELETE("/items/:id", func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 		fmt.Println(id, err)
 		if err != nil {
