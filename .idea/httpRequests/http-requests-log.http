@@ -1,3 +1,134 @@
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
+<> 2024-02-14T090945.200.json
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
+<> 2024-02-14T090903.200.json
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+{:
+    "userId": "aba1740",
+    "password": "dbwls1234",
+    "name": "박유진",
+    "gender" : false,
+}:
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-14T090350.400.txt
+
+###
+
+POST http://localhost:8080/users
+Content-Length: 100
+Content-Type: */*; charset=UTF-8
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "userId": "aba1740",
+    "password": "dbwls1234",
+    "name": "박유진",
+"gender" : false,
+}
+
+<> 2024-02-14T090239.400.txt
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+{:
+    "userId": "aba1740",
+    "password": "dbwls1234",
+    "name": "박유진",
+"gender" : false,
+}:
+Content-Length: 0
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-14T090159.400.txt
+
+###
+
+GET http://localhost:8080/myCloset
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-14T084905.200.json
+
+###
+
+POST http://localhost:8080/addToMyCloset
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-14T084859.200.json
+
+###
+
+POST http://localhost:8080/addToMyCloset
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-14T084850.200.json
+
+###
+
 GET http://localhost:8080/myCloset
 Connection: Keep-Alive
 User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)

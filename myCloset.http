@@ -1,5 +1,5 @@
 #Add MyCloset
-POST http://localhost:8080/addToMyCloset 
+POST http://localhost:8080/itmes
 Content-Type: application/json
 
 {
@@ -9,7 +9,18 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/myCloset
+GET http://localhost:8080/itmes
 
 ###
-DELETE http://localhost:8080/removeItem/1
+DELETE http://localhost:8080/items/1
+
+###
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}

@@ -24,6 +24,7 @@ type getItem struct {
 
 var myCloset []postItem
 var itemId = 1
+var userId = 1
 
 type category struct {
 	id   int
@@ -38,6 +39,17 @@ var categoryList = []category{
 	{5, "가방"},
 	{6, "악세서리"},
 }
+
+type userInformation struct {
+	Id       int    `json:"id"`
+	UserId   string `json:"userId"`
+	Password string `json:"password"`
+	Name     string `json:"name"`
+	Gender   bool   `json:"gender"`
+}
+
+// true=male, flase=female
+var userInformationList = []userInformation{}
 
 func main() {
 	r := gin.Default()
@@ -64,7 +76,7 @@ func main() {
 			"data":    addItem,
 		})
 
-		itemId++
+		itemId++ //함수안에서만 증가하는게 아닌 전역 변수에도 영향을 미치는 이유?
 	})
 
 	r.GET("/items", func(c *gin.Context) {
@@ -118,6 +130,23 @@ func main() {
 		myCloset = append(myCloset[:index], myCloset[index+1:]...)
 		c.IndentedJSON(http.StatusOK, item)
 
+	})
+
+	r.POST("/users", func(c *gin.Context) {
+		var data userInformation
+		if err := c.BindJSON(&data); err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "Invalid request. Please provide valid data for clothing registration.",
+			})
+			return
+		}
+		data.Id = userId
+
+		userInformationList = append(userInformationList, data)
+		fmt.Println(userInformationList)
+		c.IndentedJSON(http.StatusOK, data)
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
