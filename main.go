@@ -143,10 +143,10 @@ func main() {
 			return
 		}
 		data.Id = userId
-
 		userInformationList = append(userInformationList, data)
 		fmt.Println(userInformationList)
 		c.IndentedJSON(http.StatusOK, data)
+		userId++
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

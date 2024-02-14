@@ -12,6 +12,60 @@ Accept-Encoding: br,deflate,gzip,x-gzip
   "gender" : false
 }
 
+<> 2024-02-14T091258.200.json
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
+<> 2024-02-14T091252.200.json
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
+<> 2024-02-14T091230.200.json
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
 <> 2024-02-14T090945.200.json
 
 ###
