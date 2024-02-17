@@ -1,3 +1,212 @@
+GET http://localhost:8080/items
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-17T163927.200.json
+
+###
+
+POST http://localhost:8080/items
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T163926.200.json
+
+###
+
+GET http://localhost:8080/items
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-17T163920.200.json
+
+###
+
+GET http://localhost:8080/items
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-17T161548.200.json
+
+###
+
+POST http://localhost:8080/items
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T161545.200.json
+
+###
+
+GET http://localhost:8080/items
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-17T161357.200.json
+
+###
+
+GET http://localhost:8080/itmes
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-17T161333.404.txt
+
+###
+
+POST http://localhost:8080/items
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T161329.200.json
+
+###
+
+POST http://localhost:8080/items
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T155430.200.json
+
+###
+
+POST http://localhost:8080/itmes
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T155145.404.txt
+
+###
+
+POST http://localhost:8080/itmes
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T155022.404.txt
+
+###
+
+POST http://localhost:8080/itmes
+Content-Type: application/json
+Content-Length: 118
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+    "itemName": "12",
+    "category":1,
+    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
+}
+
+<> 2024-02-17T154926.404.txt
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
+<> 2024-02-17T145701.200.json
+
+###
+
+GET http://localhost:8080/itmes
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+<> 2024-02-17T145652.404.txt
+
+###
+
+POST http://localhost:8080/users
+Content-Type: application/json
+Content-Length: 98
+Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
+Accept-Encoding: br,deflate,gzip,x-gzip
+
+{
+  "userId" : "aba1740",
+  "password" : "dbwls1234",
+  "name" : "박유진",
+  "gender" : false
+}
+
+<> 2024-02-17T145646.200.json
+
+###
+
 POST http://localhost:8080/users
 Content-Type: application/json
 Content-Length: 98
@@ -452,24 +661,6 @@ Accept-Encoding: br,deflate,gzip,x-gzip
 }
 
 <> 2024-02-11T161458.200.json
-
-###
-
-POST http://localhost:8080/addToMyCloset
-Content-Type: application/json
-Content-Length: 137
-Connection: Keep-Alive
-User-Agent: Apache-HttpClient/4.5.14 (Java/17.0.9)
-Accept-Encoding: br,deflate,gzip,x-gzip
-
-{
-    "itemaI": 123,
-    "itemName": "12",
-    "category":1,
-    "image": "https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
-}
-
-<> 2024-02-11T161310.200.json
 
 ###
 

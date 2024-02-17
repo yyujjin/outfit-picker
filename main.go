@@ -1,10 +1,14 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/samber/lo"
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -54,6 +58,16 @@ var userInformationList = []userInformation{}
 func main() {
 	r := gin.Default()
 
+	// 환경변수 읽기
+	password := os.Getenv("DB_password")
+	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
+
+	db, err := sql.Open("mysql", dataSourceName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	r.POST("/items", func(c *gin.Context) {
 		var addItem postItem
 		// item -> itemId 값을 넣어주고, itemID를 1 증가시켜
@@ -65,7 +79,11 @@ func main() {
 			})
 			return
 		}
-
+		result, err := db.Exec("INSERT INTO closet (name, category,image) VALUES (?,?,?) ", addItem.ItemName, addItem.Category, addItem.Image)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(result)
 		addItem.ItemId = itemId
 
 		myCloset = append(myCloset, addItem)
@@ -76,37 +94,35 @@ func main() {
 			"data":    addItem,
 		})
 
-		itemId++ //함수안에서만 증가하는게 아닌 전역 변수에도 영향을 미치는 이유?
+		itemId++ //전역변수는 함수안에서 실행을 끝내도 값이 적용이된다.
 	})
 
 	r.GET("/items", func(c *gin.Context) {
-		fmt.Println(myCloset)
-		getItemArr := []getItem{}
-		for _, value := range myCloset {
-
-			var categoryName string
-			for _, categoryValue := range categoryList {
-				if value.Category == categoryValue.id {
-					categoryName = categoryValue.name
-				}
-			}
-
-			getItemArr = append(getItemArr, getItem{
-				ItemId:   value.ItemId,
-				ItemName: value.ItemName,
-				Category: categoryName,
-				Image:    value.Image,
-			})
+		var id int
+		var name string
+		var category int
+		var image string
+		rows, err := db.Query("SELECT * FROM closet where id >= ?", 1)
+		if err != nil {
+			log.Fatal(err)
 		}
+		defer rows.Close() //반드시 닫는다 (지연하여 닫기)
+		item := []postItem{}
+
+		for rows.Next() {
+			err := rows.Scan(&id, &name, &category, &image)
+			if err != nil {
+				log.Fatal(err)
+			}
+			item = append(item, postItem{id, name, category, image})
+			fmt.Println(id, name, category, image)
+		}
+
 		c.IndentedJSON(http.StatusOK, gin.H{
-			"data": getItemArr,
+			"data": item,
 		})
 	})
 
-	//type intArray []int // 	별명만들기
-	//
-	//var a = []int{1, 2, 3}
-	//var a = intArray{1, 2, 3}
 	r.DELETE("/items/:id", func(c *gin.Context) {
 		id, err := strconv.Atoi(c.Param("id"))
 		fmt.Println(id, err)
