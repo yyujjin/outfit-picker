@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/samber/lo"
 	"log"
 	"net/http"
 	"os"
@@ -13,22 +12,11 @@ import (
 )
 
 type postItem struct {
-	ItemId   int    `json:"itemId"`
+	ItemId int `json:itemId`
 	ItemName string `json:"itemName"`
 	Category int    `json:"category"`
 	Image    string `json:"image"`
 }
-
-type getItem struct {
-	ItemId   int    `json:"itemId"`
-	ItemName string `json:"itemName"`
-	Category string `json:"category"`
-	Image    string `json:"image"`
-}
-
-var myCloset []postItem
-var itemId = 1
-var userId = 1
 
 type category struct {
 	id   int
@@ -45,21 +33,28 @@ var categoryList = []category{
 }
 
 type userInformation struct {
-	Id       int    `json:"id"`
 	UserId   string `json:"userId"`
 	Password string `json:"password"`
 	Name     string `json:"name"`
-	Gender   bool   `json:"gender"`
+	Gender   bool   `json:"gender"` // true=male, flase=female
 }
 
-// true=male, flase=female
-var userInformationList = []userInformation{}
+
+func switchGenderToInt (gender bool) int {
+	if gender == true {
+		return 0
+	}else{
+		return 1
+	}
+}
+
+
 
 func main() {
 	r := gin.Default()
 
-	// 환경변수 읽기
 	password := os.Getenv("DB_password")
+	fmt.Println(password)
 	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
 
 	db, err := sql.Open("mysql", dataSourceName)
@@ -70,7 +65,7 @@ func main() {
 
 	r.POST("/items", func(c *gin.Context) {
 		var addItem postItem
-		// item -> itemId 값을 넣어주고, itemID를 1 증가시켜
+
 		if err := c.BindJSON(&addItem); err != nil {
 			fmt.Println(err)
 			c.JSON(http.StatusBadRequest, gin.H{
@@ -79,22 +74,16 @@ func main() {
 			})
 			return
 		}
+
 		result, err := db.Exec("INSERT INTO closet (name, category,image) VALUES (?,?,?) ", addItem.ItemName, addItem.Category, addItem.Image)
 		if err != nil {
 			log.Fatal(err)
 		}
 		fmt.Println(result)
-		addItem.ItemId = itemId
-
-		myCloset = append(myCloset, addItem)
-		fmt.Println(myCloset)
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "success",
-			"message": "Clothing item successfully registered.",
-			"data":    addItem,
+			"message": "추가가 완료되었습니다!",
 		})
-
-		itemId++ //전역변수는 함수안에서 실행을 끝내도 값이 적용이된다.
 	})
 
 	r.GET("/items", func(c *gin.Context) {
@@ -124,6 +113,7 @@ func main() {
 	})
 
 	r.DELETE("/items/:id", func(c *gin.Context) {
+		
 		id, err := strconv.Atoi(c.Param("id"))
 		fmt.Println(id, err)
 		if err != nil {
@@ -133,21 +123,18 @@ func main() {
 			})
 			return
 		}
-		item, index, ok := lo.FindIndexOf(myCloset, func(item postItem) bool {
-			return item.ItemId == id
-		})
 
-		if ok == false {
-			c.JSON(http.StatusNotFound, gin.H{
-				"data": "id를 찾을 수 없습니다.",
-			})
-			return
+		result, err := db.Exec("DELETE FROM closet where id = ?",id) //%c가아닌 %d 이유
+		fmt.Println(result)
+		if err != nil {
+			log.Fatal(err)
 		}
-		myCloset = append(myCloset[:index], myCloset[index+1:]...)
-		c.IndentedJSON(http.StatusOK, item)
+
+		c.IndentedJSON(http.StatusOK, "삭제가 완료되었습니다!")
 
 	})
 
+	
 	r.POST("/users", func(c *gin.Context) {
 		var data userInformation
 		if err := c.BindJSON(&data); err != nil {
@@ -158,11 +145,16 @@ func main() {
 			})
 			return
 		}
-		data.Id = userId
-		userInformationList = append(userInformationList, data)
-		fmt.Println(userInformationList)
+
+		a := switchGenderToInt(data.Gender) //함수만들기는 main밖에서 
+
+		result, err := db.Exec("INSERT INTO user (user_id, password,name,gender) VALUES (?,?,?,?) ",
+		 data.UserId, data.Password, data.Name, a)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(result)
 		c.IndentedJSON(http.StatusOK, data)
-		userId++
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
