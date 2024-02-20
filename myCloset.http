@@ -15,12 +15,15 @@ GET http://localhost:8080/items
 DELETE http://localhost:8080/items/5
 
 ###
-POST http://localhost:8080/users
+POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
   "userId" : "LALA",
   "password" : "LOCO12345",
-  "name" : "yujin",
+  "name" : "박유진",
   "gender" : false
 }
+
+###
+GET http://localhost:8080/api/categories

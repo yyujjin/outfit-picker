@@ -19,17 +19,8 @@ type postItem struct {
 }
 
 type category struct {
-	id   int
-	name string
-}
-
-var categoryList = []category{
-	{1, "아우터"},
-	{2, "상의"},
-	{3, "하의"},
-	{4, "신발"},
-	{5, "가방"},
-	{6, "악세서리"},
+	Id   int
+	Name string
 }
 
 type userInformation struct {
@@ -109,6 +100,31 @@ func main() {
 
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"data": item,
+		})
+	})
+
+	r.GET("/api/categories", func(c *gin.Context) {
+		var id int
+		var name string
+
+		rows, err := db.Query("SELECT * FROM categorylist ORDER BY id ASC;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close() //반드시 닫는다 (지연하여 닫기)
+		categoryList := []category{}
+
+		for rows.Next() {
+			err := rows.Scan(&id, &name)
+			if err != nil {
+				log.Fatal(err)
+			}
+			categoryList = append(categoryList, category{id, name})
+			fmt.Println(id, name)
+		}
+
+		c.IndentedJSON(http.StatusOK, gin.H{
+			"data": categoryList,
 		})
 	})
 
