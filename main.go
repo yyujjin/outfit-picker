@@ -63,7 +63,7 @@ func main() {
 	}
 	defer db.Close()
 
-	r.POST("/items", func(c *gin.Context) {
+	r.POST("/api/items", func(c *gin.Context) {
 		var addItem postItem
 
 		if err := c.BindJSON(&addItem); err != nil {
@@ -86,7 +86,7 @@ func main() {
 		})
 	})
 
-	r.GET("/items", func(c *gin.Context) {
+	r.GET("/api/items", func(c *gin.Context) {
 		var id int
 		var name string
 		var category int
@@ -112,7 +112,7 @@ func main() {
 		})
 	})
 
-	r.DELETE("/items/:id", func(c *gin.Context) {
+	r.DELETE("/api/items/:id", func(c *gin.Context) {
 		
 		id, err := strconv.Atoi(c.Param("id"))
 		fmt.Println(id, err)
@@ -135,7 +135,7 @@ func main() {
 	})
 
 	
-	r.POST("/users", func(c *gin.Context) {
+	r.POST("/api/users", func(c *gin.Context) {
 		var data userInformation
 		if err := c.BindJSON(&data); err != nil {
 			fmt.Println(err)
