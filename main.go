@@ -79,10 +79,10 @@ func main() {
  
 	r.GET("/api/items", func(c *gin.Context) {
 		type getItem struct {
-			Id int
-			Name string
-			Category string
-			Image string
+			Id int `json:"id"`
+			Name string `json:"name"`
+			Category string `json:"category"`
+			Image string `json:"image"`
 		}
 
 		var id int
