@@ -76,25 +76,35 @@ func main() {
 			"message": "추가가 완료되었습니다!",
 		})
 	})
-
+ 
 	r.GET("/api/items", func(c *gin.Context) {
+		type getItem struct {
+			Id int
+			Name string
+			Category string
+			Image string
+		}
+
 		var id int
 		var name string
-		var category int
+		var category string	
 		var image string
-		rows, err := db.Query("SELECT * FROM closet where id >= ?", 1)
+		rows, err := db.Query("SELECT closet.id, closet.name, cl.name as category, closet.image FROM closet join categorylist cl on closet.category=cl.id ")
 		if err != nil {
 			log.Fatal(err)
 		}
+		
 		defer rows.Close() //반드시 닫는다 (지연하여 닫기)
-		item := []postItem{}
+		item := []getItem{}
 
+		// 
 		for rows.Next() {
 			err := rows.Scan(&id, &name, &category, &image)
 			if err != nil {
 				log.Fatal(err)
 			}
-			item = append(item, postItem{id, name, category, image})
+			
+			item = append(item, getItem{id, name, category, image})
 			fmt.Println(id, name, category, image)
 		}
 
