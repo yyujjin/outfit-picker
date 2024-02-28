@@ -183,5 +183,40 @@ func main() {
 		c.IndentedJSON(http.StatusOK, data)
 	})
 
+	r.POST("/api/coordis", func(c *gin.Context) {
+		type coordi struct {
+			Date string `json:"date"`
+			Photo string `json: "photo"`
+			Temperature float32 `json:"temperature"`
+			Weather int `json:"weather"`
+		}
+
+		var registerCoordi coordi
+
+		if err := c.BindJSON(&registerCoordi); err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "Invalid request. Please provide valid data for clothing registration.",
+			})
+			return
+		}
+
+		result, err := db.Exec(
+			"INSERT INTO coordi (date, photo,temperature,weather) VALUES (?,?,?,?) ", 
+			registerCoordi.Date, registerCoordi.Photo, registerCoordi.Temperature,registerCoordi.Weather,
+		)
+		if err != nil {
+			log.Fatal(err)
+		} 
+		fmt.Println(result)
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "success",
+			"message": "추가가 완료되었습니다!",
+		})
+
+		// TODO: 에러처리 해야함
+	})
+
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

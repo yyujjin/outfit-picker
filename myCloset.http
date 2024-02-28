@@ -27,3 +27,13 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/categories
+
+###
+POST http://localhost:8080/api/coordis
+
+{
+  "date": "2023-02-28",
+	"photo": "이것은사진",
+	"temperature": 2.0,
+	"weather": 0
+}
