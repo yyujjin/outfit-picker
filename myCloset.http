@@ -37,3 +37,6 @@ POST http://localhost:8080/api/coordis
 	"temperature": 2.0,
 	"weather": 0
 }
+
+###
+GET http://localhost:8080/api/coordis

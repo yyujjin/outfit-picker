@@ -218,5 +218,41 @@ func main() {
 		// TODO: 에러처리 해야함
 	})
 
+	r.GET("/api/coordis", func(c *gin.Context) {
+		var id int
+		var date string
+		var photo string
+		var temperature float32
+		var weather int
+
+		type getCoordi struct {
+			// TODO: 소문자로 바꾸기
+			Id int 
+			Date string
+			Photo string
+			Temperature float32
+			Weather int
+		}
+
+		rows, err := db.Query("SELECT * FROM coordi ORDER BY id ASC;")
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer rows.Close() //반드시 닫는다 (지연하여 닫기)
+		coordiList := []getCoordi{}
+
+		for rows.Next() {
+			err := rows.Scan(&id, &date, &photo, &temperature,&weather)
+			if err != nil {
+				log.Fatal(err)
+			}
+			coordiList = append(coordiList, getCoordi{id,date,photo,temperature,weather})
+		}
+
+		c.IndentedJSON(http.StatusOK, gin.H{
+			"data": coordiList,
+		})
+	})
+
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
