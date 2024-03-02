@@ -238,8 +238,13 @@ func main() {
 		})
 
 	})
-
+	// /api/coordis
 	r.GET("/api/coordis", func(c *gin.Context) {
+
+		month := c.Query("month")
+		year := c.Query("year")
+
+		fmt.Println(month,year)
 		var id int
 		var date string
 		var photo string
@@ -254,7 +259,11 @@ func main() {
 			Weather int `json:"weather"`
 		}
 
-		rows, err := db.Query("SELECT * FROM coordi ORDER BY id ASC;")
+		// date >= '2024-02-01' and date <'2024-03-01'
+		first := year + "-" + month + "-" + "01"
+		fmt.Println(first)
+
+		rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
 		if err != nil {
 			log.Fatal(err)
 		}
