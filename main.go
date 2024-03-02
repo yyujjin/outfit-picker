@@ -185,10 +185,10 @@ func main() {
 
 	r.POST("/api/coordis", func(c *gin.Context) {
 		type coordi struct {
-			Date string `json:"date"`
-			Photo string `json: "photo"`
+			Date string `json:"date" binding:"required"` 
+			Photo string `json: "photo" binding:"required"`
 			Temperature float32 `json:"temperature"`
-			Weather int `json:"weather"`
+			Weather int `json:"weather" binding:"required"`
 		}
 
 		var registerCoordi coordi
@@ -201,21 +201,42 @@ func main() {
 			})
 			return
 		}
+		//위에 에러를 주석하지 않으면 밑에께 작동이 안되는데 위에껀
+		//왜 작동을 하는가? 
+		if err := c.ShouldBindJSON(&registerCoordi); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"error": "필수 입력값을 입력해주세요.",
+			})
+			return
+		}
 
 		result, err := db.Exec(
 			"INSERT INTO coordi (date, photo,temperature,weather) VALUES (?,?,?,?) ", 
 			registerCoordi.Date, registerCoordi.Photo, registerCoordi.Temperature,registerCoordi.Weather,
 		)
 		if err != nil {
-			log.Fatal(err)
+			log.Fatal(err) // TODO 뭐하는 앤지 알아오기
+			c.JSON(http.StatusBadRequest, gin.H{
+						"status":  "error",
+						"message": "Invalid request. Please provide valid data for clothing registration.",
+					})
+					return
 		} 
 		fmt.Println(result)
+		//이 에러 처리는 굳이 해줄필요가 없나? 
+		// if err != nil {
+		// 	c.JSON(http.StatusBadRequest, gin.H{
+		// 		"status":  "error",
+		// 		"message": "Invalid request. Please provide valid data for clothing registration.",
+		// 	})
+		// 	return
+		// }
+
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "success",
 			"message": "추가가 완료되었습니다!",
 		})
 
-		// TODO: 에러처리 해야함
 	})
 
 	r.GET("/api/coordis", func(c *gin.Context) {
@@ -226,12 +247,11 @@ func main() {
 		var weather int
 
 		type getCoordi struct {
-			// TODO: 소문자로 바꾸기
-			Id int 
-			Date string
-			Photo string
-			Temperature float32
-			Weather int
+			Id int `json:"id"`
+			Date string `json:"date"`
+			Photo string `json:"photo"`
+			Temperature float32 `json:"temperature"`
+			Weather int `json:"weather"`
 		}
 
 		rows, err := db.Query("SELECT * FROM coordi ORDER BY id ASC;")
