@@ -32,11 +32,10 @@ type userInformation struct {
 
 
 func switchGenderToInt (gender bool) int {
-	if gender == true {
+	if gender {
 		return 0
-	}else{
-		return 1
 	}
+	return 1
 }
 
 
@@ -183,6 +182,55 @@ func main() {
 		c.IndentedJSON(http.StatusOK, data)
 	})
 
+	r.POST("/api/signups", func(c *gin.Context) {
+		type signup struct {
+			Id string `json:"id" binding:"required"` 
+			Password string `json:"password" binding:"required"` 
+			Name string `json:"name" binding:"required"` 
+			Birthday string `json:"birthday" binding:"required"`  
+			PhoneNumber string `json:"phoneNumber" binding:"required"` 
+			Gender int `json:"gender" ` 
+		}
+
+		var data signup
+
+		if err := c.BindJSON(&data); err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "필수 값을 입력해 주세요",
+			})
+			return
+		}
+	
+		var count int
+		err := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ?",data.Id).Scan(&count) // id가 1인 학생을 조회
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if count > 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "id가 중복되었습니다.",
+			})
+			return
+		}
+		result, err := db.Exec("INSERT INTO user (user_id, password,name,birthday,tel,gender) VALUES (?,?,?,?,?,?) ",
+		 data.Id, data.Password, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+
+		if err != nil {
+			log.Fatal(err)
+			fmt.Println(result)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  "error",
+				"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
+			})
+			
+		}
+		c.IndentedJSON(http.StatusOK, data)
+	})
+
 	r.POST("/api/coordis", func(c *gin.Context) {
 		type coordi struct {
 			Date string `json:"date" binding:"required"` 
@@ -223,14 +271,6 @@ func main() {
 					return
 		} 
 		fmt.Println(result)
-		//이 에러 처리는 굳이 해줄필요가 없나? 
-		// if err != nil {
-		// 	c.JSON(http.StatusBadRequest, gin.H{
-		// 		"status":  "error",
-		// 		"message": "Invalid request. Please provide valid data for clothing registration.",
-		// 	})
-		// 	return
-		// }
 
 		c.JSON(http.StatusOK, gin.H{
 			"status":  "success",
@@ -281,6 +321,30 @@ func main() {
 		c.IndentedJSON(http.StatusOK, gin.H{
 			"data": coordiList,
 		})
+	})
+
+	//TODO: 코디삭제 API 만들기 
+	r.DELETE("/api/coordis/:id", func(c *gin.Context) {
+		
+		id, err := strconv.Atoi(c.Param("id"))
+		fmt.Println(id, err)
+		if err != nil {
+			fmt.Println("경고")
+			return
+		}
+
+		result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
+		fmt.Println(result)
+		//에러처리안됨 
+		if err != nil {
+			log.Fatal(err)
+			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "error",
+				"message": "id를 확인해 주세요!",
+			})
+		}
+
+		c.IndentedJSON(http.StatusOK, "삭제가 완료되었습니다!")
+
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")

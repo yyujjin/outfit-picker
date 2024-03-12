@@ -41,3 +41,19 @@ POST http://localhost:8080/api/coordis
 //그럼 0 이상의 숫자를 입력하도록 설정해야하납? 
 ###
 GET http://localhost:8080/api/coordis?year=2023&month=02
+
+###
+POST http://localhost:8080/api/signups
+
+{
+
+  "Id" : "lalasweet12315",
+  "Password" : "nono4545",
+  "Name" : "박혁거세",
+  "Birthday" : "2004-12-14",
+  "PhoneNumber" : "010-4444-5555",
+  "Gender" : 0
+}
+
+###
+DELETE http://localhost:8080/api/coordis/3
