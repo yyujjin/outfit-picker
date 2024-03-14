@@ -9,7 +9,8 @@ import (
 	"net/http"
 	"os"
 	"strconv"
-)
+	"golang.org/x/crypto/bcrypt"
+) 	
 
 type postItem struct {
 	ItemId int `json:itemId`
@@ -22,24 +23,6 @@ type category struct {
 	Id   int
 	Name string
 }
-
-//TODO: 이건 필요없는건가
-type userInformation struct {
-	UserId   string `json:"userId"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	Gender   bool   `json:"gender"` // true=male, flase=female
-}
-
-
-func switchGenderToInt (gender bool) int {
-	if gender {
-		return 0
-	}
-	return 1
-}
-
-
 
 func main() {
 	r := gin.Default()
@@ -89,6 +72,12 @@ func main() {
 		}
 
 		c.IndentedJSON(http.StatusOK, "로그인 되었습니다! ") //TODO: 차이점 뭘까 c.JSON
+		//이쁘게 줄 바꿈해서 보여주는거 , 테스트 용도로 많이 씀 -> 눈에 잘 들어오니까 
+		// {"user":"yujin"} // json
+		// {
+		// 	"user": yujin //indented
+		// }
+
 	})
 
 
@@ -198,30 +187,7 @@ func main() {
 
 	})
 
-	
 	r.POST("/api/users", func(c *gin.Context) {
-		var data userInformation
-		if err := c.BindJSON(&data); err != nil {
-			fmt.Println(err)
-			c.JSON(http.StatusBadRequest, gin.H{
-				"status":  "error",
-				"message": "Invalid request. Please provide valid data for clothing registration.",
-			})
-			return
-		}
-
-		a := switchGenderToInt(data.Gender) //함수만들기는 main밖에서 
-
-		result, err := db.Exec("INSERT INTO user (user_id, password,name,gender) VALUES (?,?,?,?) ",
-		 data.UserId, data.Password, data.Name, a)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(result)
-		c.IndentedJSON(http.StatusOK, data) //TODO: 차이점 뭘까 c.JSON
-	})
-
-	r.POST("/api/signups", func(c *gin.Context) {
 		type signup struct {
 			Id string `json:"id" binding:"required"` 
 			Password string `json:"password" binding:"required"` 
@@ -255,8 +221,17 @@ func main() {
 			})
 			return
 		}
+
+		pass := []byte(data.Password)
+
+		hash, err := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(string(hash))
+		
 		result, err := db.Exec("INSERT INTO user (user_id, password,name,birthday,tel,gender) VALUES (?,?,?,?,?,?) ",
-		 data.Id, data.Password, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+		 data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
 
 		if err != nil {
 			log.Fatal(err)

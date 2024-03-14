@@ -15,17 +15,6 @@ GET http://localhost:8080/api/items
 DELETE http://localhost:8080/items/5
 
 ###
-POST http://localhost:8080/api/users
-Content-Type: application/json
-
-{
-  "userId" : "LALA",
-  "password" : "LOCO12345",
-  "name" : "박유진",
-  "gender" : false
-}
-
-###
 GET http://localhost:8080/api/categories
 
 ###
@@ -43,11 +32,11 @@ POST http://localhost:8080/api/coordis
 GET http://localhost:8080/api/coordis?year=2023&month=02
 
 ###
-POST http://localhost:8080/api/signups
+POST http://localhost:8080/api/users
 
 {
 
-  "Id" : "lalasweet12315",
+  "Id" : "lalaswesqq",
   "Password" : "nono4545",
   "Name" : "박혁거세",
   "Birthday" : "2004-12-14",
