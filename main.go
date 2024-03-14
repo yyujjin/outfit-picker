@@ -149,7 +149,7 @@ func main() {
 			return
 		}
 
-		result, err := db.Exec("DELETE FROM closet where id = ?",id) //%c가아닌 %d 이유
+		result, err := db.Exec("DELETE FROM closet where id = ?",id) 
 		fmt.Println(result)
 		if err != nil {
 			log.Fatal(err)
@@ -179,7 +179,7 @@ func main() {
 			log.Fatal(err)
 		}
 		fmt.Println(result)
-		c.IndentedJSON(http.StatusOK, data)
+		c.IndentedJSON(http.StatusOK, data) //TODO: 차이점 뭘까 c.JSON
 	})
 
 	r.POST("/api/signups", func(c *gin.Context) {
@@ -241,16 +241,6 @@ func main() {
 
 		var registerCoordi coordi
 
-		if err := c.BindJSON(&registerCoordi); err != nil {
-			fmt.Println(err)
-			c.JSON(http.StatusBadRequest, gin.H{
-				"status":  "error",
-				"message": "Invalid request. Please provide valid data for clothing registration.",
-			})
-			return
-		}
-		//위에 에러를 주석하지 않으면 밑에께 작동이 안되는데 위에껀
-		//왜 작동을 하는가? 
 		if err := c.ShouldBindJSON(&registerCoordi); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"error": "필수 입력값을 입력해주세요.",
@@ -263,7 +253,7 @@ func main() {
 			registerCoordi.Date, registerCoordi.Photo, registerCoordi.Temperature,registerCoordi.Weather,
 		)
 		if err != nil {
-			log.Fatal(err) // TODO 뭐하는 앤지 알아오기
+			log.Fatal(err) // TODO: 뭐하는 앤지 알아오기
 			c.JSON(http.StatusBadRequest, gin.H{
 						"status":  "error",
 						"message": "Invalid request. Please provide valid data for clothing registration.",
@@ -278,7 +268,7 @@ func main() {
 		})
 
 	})
-	// /api/coordis
+	
 	r.GET("/api/coordis", func(c *gin.Context) {
 
 		month := c.Query("month")
@@ -323,7 +313,6 @@ func main() {
 		})
 	})
 
-	//TODO: 코디삭제 API 만들기 
 	r.DELETE("/api/coordis/:id", func(c *gin.Context) {
 		
 		id, err := strconv.Atoi(c.Param("id"))
@@ -335,12 +324,14 @@ func main() {
 
 		result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
 		fmt.Println(result)
-		//에러처리안됨 
+	 
 		if err != nil {
 			log.Fatal(err)
-			c.IndentedJSON(http.StatusNotFound, gin.H{"status": "error",
-				"message": "id를 확인해 주세요!",
+			c.IndentedJSON(http.StatusInternalServerError, gin.H{
+				"status":  "error",
+				"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 			})
+			
 		}
 
 		c.IndentedJSON(http.StatusOK, "삭제가 완료되었습니다!")
