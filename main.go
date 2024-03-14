@@ -23,6 +23,7 @@ type category struct {
 	Name string
 }
 
+//TODO: 이건 필요없는건가
 type userInformation struct {
 	UserId   string `json:"userId"`
 	Password string `json:"password"`
@@ -52,6 +53,59 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
+	//TODO: 로그인 API 만들기 
+	r.POST("/api/login", func(c *gin.Context) {
+		type login struct {
+			Id string `json : "id" binding:"required"` 
+			Password string `josn : "password" binding:"required"`
+		}
+
+		var data login
+	
+		if err := c.BindJSON(&data); err != nil {
+			fmt.Println(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "잘못된 요청입니다. 올바른 데이터를 제공해주세요.",
+			})
+			return
+		}
+
+		var id int
+
+		err := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ?",data.Id).Scan(&id) 
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if id == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "잘못된 아이디입니다. 다시 시도해주세요.",
+			})
+			return
+		}
+
+		var password int
+
+		err1 := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ? AND password = ? ",data.Id,data.Password).Scan(&password) 
+
+		if err1 != nil {
+			log.Fatal(err)
+		}
+
+		if password == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "잘못된 패스워드입니다. 다시 시도해주세요.",
+			})
+			return
+		}
+
+		c.IndentedJSON(http.StatusOK, "로그인 되었습니다! ") //TODO: 차이점 뭘까 c.JSON
+	})
+
 
 	r.POST("/api/items", func(c *gin.Context) {
 		var addItem postItem
