@@ -72,33 +72,18 @@ func main() {
 			return
 		}
 
-		var id int
+		var userCount int
 
-		err := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ?",data.Id).Scan(&id) 
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if id == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"status":  "error",
-				"message": "잘못된 아이디입니다. 다시 시도해주세요.",
-			})
-			return
-		}
-
-		var password int
-
-		err1 := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ? AND password = ? ",data.Id,data.Password).Scan(&password) 
+		err1 := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ? AND password = ? ",data.Id,data.Password).Scan(&userCount) 
 
 		if err1 != nil {
 			log.Fatal(err)
 		}
 
-		if password == 0 {
+		if userCount == 0 {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"status":  "error",
-				"message": "잘못된 패스워드입니다. 다시 시도해주세요.",
+				"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
 			})
 			return
 		}
