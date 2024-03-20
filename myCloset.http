@@ -36,9 +36,9 @@ POST http://localhost:8080/api/users
 
 {
 
-  "Id" : "lalaswesqq",
-  "Password" : "nono4545",
-  "Name" : "박혁거세",
+  "Id" : "OMG",
+  "Password" : "GOING",
+  "Name" : "세일러문",
   "Birthday" : "2004-12-14",
   "PhoneNumber" : "010-4444-5555",
   "Gender" : 0
@@ -51,6 +51,6 @@ DELETE http://localhost:8080/api/coordis/3
 POST  http://localhost:8080/api/login
 
 {
-  "Id" : "losgenle",
-  "Password" : "lalland12"
+  "Id" : "OM",
+  "Password" : "GOING"
 }

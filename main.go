@@ -24,6 +24,12 @@ type category struct {
 	Name string
 }
 
+func EqualPassword(hashedPassword string, password string) bool {
+	return bcrypt.CompareHashAndPassword(
+	[]byte(hashedPassword),	
+	[]byte(password)) == nil
+}
+
 func main() {
 	r := gin.Default()
 
@@ -36,6 +42,8 @@ func main() {
 		log.Fatal(err)
 	}
 	defer db.Close()
+
+	
 
 	//TODO: 로그인 API 만들기 
 	r.POST("/api/login", func(c *gin.Context) {
@@ -54,29 +62,27 @@ func main() {
 			})
 			return
 		}
+		
+		var userPass string
 
-		var userCount int
 
-		err1 := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ? AND password = ? ",data.Id,data.Password).Scan(&userCount) 
+		err := db.QueryRow("SELECT password FROM user WHERE user_id = ?",data.Id).Scan(&userPass) 
 
-		if err1 != nil {
+		if err != nil {
 			log.Fatal(err)
-		}
-
-		if userCount == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"status":  "error",
-				"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
-			})
 			return
 		}
 
-		c.IndentedJSON(http.StatusOK, "로그인 되었습니다! ") //TODO: 차이점 뭘까 c.JSON
-		//이쁘게 줄 바꿈해서 보여주는거 , 테스트 용도로 많이 씀 -> 눈에 잘 들어오니까 
-		// {"user":"yujin"} // json
-		// {
-		// 	"user": yujin //indented
-		// }
+		isUser := EqualPassword(userPass,data.Password)
+
+		if isUser {
+			c.IndentedJSON(http.StatusOK, "로그인 되었습니다! ")
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"status":  "error",
+			"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
+		})
 
 	})
 
