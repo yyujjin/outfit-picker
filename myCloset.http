@@ -36,7 +36,7 @@ POST http://localhost:8080/api/users
 
 {
 
-  "Id" : "OMG",
+  "Id" : "O",
   "Password" : "GOING",
   "Name" : "세일러문",
   "Birthday" : "2004-12-14",
@@ -51,6 +51,6 @@ DELETE http://localhost:8080/api/coordis/3
 POST  http://localhost:8080/api/login
 
 {
-  "Id" : "OM",
+  "Id" : "O",
   "Password" : "GOING"
 }

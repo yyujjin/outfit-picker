@@ -24,11 +24,9 @@ type category struct {
 	Name string
 }
 
-func EqualPassword(hashedPassword string, password string) bool {
-	return bcrypt.CompareHashAndPassword(
-	[]byte(hashedPassword),	
-	[]byte(password)) == nil
-}
+// func EqualPassword(hashedPassword string, password string) bool {
+// 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword),[]byte(password)) == nil
+// }
 
 func main() {
 	r := gin.Default()
@@ -65,23 +63,32 @@ func main() {
 		
 		var userPass string
 
-
+// 해당되는 행이 없으면 에러반환
 		err := db.QueryRow("SELECT password FROM user WHERE user_id = ?",data.Id).Scan(&userPass) 
 
 		if err != nil {
-			log.Fatal(err)
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
+			})
+			return
+		}
+		
+
+		//isUser := EqualPassword(userPass,data.Password)
+		//반환값을 변수에 담아도 되고 그냥 해도 되고
+		// 성공이 아니면 메세지 담아서 리턴
+		if bcrypt.CompareHashAndPassword([]byte(userPass), []byte(data.Password)) != nil {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"status":  "error",
+				"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
+			})
 			return
 		}
 
-		isUser := EqualPassword(userPass,data.Password)
-
-		if isUser {
-			c.IndentedJSON(http.StatusOK, "로그인 되었습니다! ")
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"status":  "error",
-			"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "success",
+			"message": "로그인 되었습니다!",
 		})
 
 	})
