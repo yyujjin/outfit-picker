@@ -1,4 +1,4 @@
-package main
+ package main
 
 import (
 	"database/sql"
@@ -24,10 +24,6 @@ type category struct {
 	Name string
 }
 
-// func EqualPassword(hashedPassword string, password string) bool {
-// 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword),[]byte(password)) == nil
-// }
-
 func main() {
 	r := gin.Default()
 
@@ -41,9 +37,7 @@ func main() {
 	}
 	defer db.Close()
 
-	
-
-	//TODO: 로그인 API 만들기 
+//로그인 API 
 	r.POST("/api/login", func(c *gin.Context) {
 		type login struct {
 			Id string `json : "id" binding:"required"` 
@@ -63,7 +57,6 @@ func main() {
 		
 		var userPass string
 
-// 해당되는 행이 없으면 에러반환
 		err := db.QueryRow("SELECT password FROM user WHERE user_id = ?",data.Id).Scan(&userPass) 
 
 		if err != nil {
@@ -74,10 +67,6 @@ func main() {
 			return
 		}
 		
-
-		//isUser := EqualPassword(userPass,data.Password)
-		//반환값을 변수에 담아도 되고 그냥 해도 되고
-		// 성공이 아니면 메세지 담아서 리턴
 		if bcrypt.CompareHashAndPassword([]byte(userPass), []byte(data.Password)) != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
 				"status":  "error",
@@ -92,8 +81,7 @@ func main() {
 		})
 
 	})
-
-
+//프론트엔드에서 사용자의 옷장에 아이템을 추가하기 위한 API
 	r.POST("/api/items", func(c *gin.Context) {
 		var addItem postItem
 
@@ -105,7 +93,7 @@ func main() {
 			})
 			return
 		}
-
+		//근데 result 는 무슨 값이지?
 		result, err := db.Exec("INSERT INTO closet (name, category,image) VALUES (?,?,?) ", addItem.ItemName, addItem.Category, addItem.Image)
 		if err != nil {
 			log.Fatal(err)
@@ -116,6 +104,8 @@ func main() {
 			"message": "추가가 완료되었습니다!",
 		})
 	})
+ 
+//자신의 옷장에 추가한 전체 의류 아이템을 확인하기 위한 API	
  
 	r.GET("/api/items", func(c *gin.Context) {
 		type getItem struct {
@@ -152,7 +142,7 @@ func main() {
 			"data": item,
 		})
 	})
-
+//TODO: 왜 필요하지?
 	r.GET("/api/categories", func(c *gin.Context) {
 		var id int
 		var name string
@@ -177,7 +167,8 @@ func main() {
 			"data": categoryList,
 		})
 	})
-
+//사용자의 옷장에서 선택한 아이템을 제거하기 위한 API
+//???? 시멘틱은 API에 적으면서 왜 쿼리는 안적지?? 
 	r.DELETE("/api/items/:id", func(c *gin.Context) {
 		
 		id, err := strconv.Atoi(c.Param("id"))
@@ -200,6 +191,7 @@ func main() {
 
 	})
 
+//회원가입 API
 	r.POST("/api/users", func(c *gin.Context) {
 		type signup struct {
 			Id string `json:"id" binding:"required"` 
@@ -247,22 +239,22 @@ func main() {
 		 data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
 
 		if err != nil {
-			log.Fatal(err)
 			fmt.Println(result)
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"status":  "error",
 				"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 			})
-			
+			return
 		}
 		c.IndentedJSON(http.StatusOK, data)
 	})
 
+//사용자가 착용한 옷 사진을 업로드하고 이를 날짜,기온,날씨와 함께 기록하는 API
 	r.POST("/api/coordis", func(c *gin.Context) {
 		type coordi struct {
 			Date string `json:"date" binding:"required"` 
 			Photo string `json: "photo" binding:"required"`
-			Temperature float32 `json:"temperature"`
+			Temperature int `json:"temperature"`
 			Weather int `json:"weather" binding:"required"`
 		}
 
@@ -270,20 +262,21 @@ func main() {
 
 		if err := c.ShouldBindJSON(&registerCoordi); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{
-				"error": "필수 입력값을 입력해주세요.",
+				"status":  "error",
+				"message": "필수 입력값을 입력해주세요.",
 			})
 			return
 		}
+		
 
 		result, err := db.Exec(
 			"INSERT INTO coordi (date, photo,temperature,weather) VALUES (?,?,?,?) ", 
 			registerCoordi.Date, registerCoordi.Photo, registerCoordi.Temperature,registerCoordi.Weather,
 		)
 		if err != nil {
-			log.Fatal(err) // TODO: 뭐하는 앤지 알아오기
-			c.JSON(http.StatusBadRequest, gin.H{
+			c.JSON(http.StatusInternalServerError, gin.H{
 						"status":  "error",
-						"message": "Invalid request. Please provide valid data for clothing registration.",
+						"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 					})
 					return
 		} 
@@ -296,6 +289,7 @@ func main() {
 
 	})
 	
+//사용자가 착용한 코디 목록을 조회하는 API  
 	r.GET("/api/coordis", func(c *gin.Context) {
 
 		month := c.Query("month")
@@ -305,14 +299,14 @@ func main() {
 		var id int
 		var date string
 		var photo string
-		var temperature float32
+		var temperature int
 		var weather int
 
 		type getCoordi struct {
 			Id int `json:"id"`
 			Date string `json:"date"`
 			Photo string `json:"photo"`
-			Temperature float32 `json:"temperature"`
+			Temperature int `json:"temperature"`
 			Weather int `json:"weather"`
 		}
 
@@ -322,17 +316,32 @@ func main() {
 
 		rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
 		if err != nil {
-			log.Fatal(err)
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"status":  "error",
+				"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
+			})
+			return
 		}
-		defer rows.Close() //반드시 닫는다 (지연하여 닫기)
+		defer rows.Close() 
 		coordiList := []getCoordi{}
 
 		for rows.Next() {
 			err := rows.Scan(&id, &date, &photo, &temperature,&weather)
 			if err != nil {
-				log.Fatal(err)
+				c.JSON(http.StatusInternalServerError, gin.H{
+					"status":  "error",
+					"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
+				})
+				return
 			}
 			coordiList = append(coordiList, getCoordi{id,date,photo,temperature,weather})
+		}
+		if !rows.Next() {
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  "error",
+				"message": "해당하는 날짜의 코디가 없습니다.",
+			})
+			return
 		}
 
 		c.IndentedJSON(http.StatusOK, gin.H{
@@ -340,25 +349,33 @@ func main() {
 		})
 	})
 
+//사용자의 코디 기록에서 해당하는 정보를 삭제하는 API
 	r.DELETE("/api/coordis/:id", func(c *gin.Context) {
 		
 		id, err := strconv.Atoi(c.Param("id"))
 		fmt.Println(id, err)
 		if err != nil {
-			fmt.Println("경고")
 			return
 		}
 
 		result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
 		fmt.Println(result)
 	 
+		// 지피티가 알려준건데 이거 맞을까?
+		if result.RowsAffected() == 0 {
+			c.JSON(http.StatusNotFound, gin.H{
+				"status":  "error",
+				"message": "해당하는 ID를 찾을 수 없습니다.",
+			})
+			return
+		}
+
 		if err != nil {
-			log.Fatal(err)
 			c.IndentedJSON(http.StatusInternalServerError, gin.H{
 				"status":  "error",
 				"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 			})
-			
+			return
 		}
 
 		c.IndentedJSON(http.StatusOK, "삭제가 완료되었습니다!")
