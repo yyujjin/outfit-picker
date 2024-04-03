@@ -362,13 +362,13 @@ func main() {
 		fmt.Println(result)
 	 
 		// 지피티가 알려준건데 이거 맞을까?
-		if result.RowsAffected() == 0 {
-			c.JSON(http.StatusNotFound, gin.H{
-				"status":  "error",
-				"message": "해당하는 ID를 찾을 수 없습니다.",
-			})
-			return
-		}
+		// if result.RowsAffected() == 0 {
+		// 	c.JSON(http.StatusNotFound, gin.H{
+		// 		"status":  "error",
+		// 		"message": "해당하는 ID를 찾을 수 없습니다.",
+		// 	})
+		// 	return
+		// }
 
 		if err != nil {
 			c.IndentedJSON(http.StatusInternalServerError, gin.H{
