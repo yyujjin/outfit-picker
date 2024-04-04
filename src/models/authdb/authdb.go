@@ -1,4 +1,4 @@
-package auth
+package authdb
 
 //auth로해서 user에 있는거랑 login에 있는거랑 합쳐?
 import (
@@ -45,7 +45,7 @@ func InsertUser(id string, hash []byte, name string ,birthday string, phoneNumbe
 }
 
 
-func CheckDuplicateID(id string) (string, error) {
+func GetPassword(id string) (string, error) {
 	password := os.Getenv("DB_password")
 	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
 

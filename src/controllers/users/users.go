@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"outfit-picker/src/models/auth"
+	"outfit-picker/src/models/authdb"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
@@ -45,7 +45,7 @@ func SignUp(c *gin.Context) {
 	}
 
 	
-	count := auth.GetUserCount(data.Id)
+	count := authdb.GetUserCount(data.Id)
 	if count > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
@@ -63,7 +63,7 @@ func SignUp(c *gin.Context) {
 	}
 	fmt.Println(string(hash))
 	
-	err= auth.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+	err= authdb.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

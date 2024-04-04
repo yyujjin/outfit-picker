@@ -1,12 +1,9 @@
 package auth
 
 import (
-	"database/sql"
-	"fmt"
-	"log"
 	"net/http"
-	"os"
-	"outfit-picker/src/models/auth"
+	"outfit-picker/src/models/authdb"
+
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -28,21 +25,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-
-	// !!! db 어쩌고 빨간색 에러뜨면 아래 코드 복사하셈
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-	// !!!!!!!
-
-
-//TODO: 
-	userPassword,err1 := auth.CheckDuplicateID(data.Id)
+	userPassword,err1 := authdb.GetPassword(data.Id)
 
 	if err1 != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
