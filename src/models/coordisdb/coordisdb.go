@@ -73,3 +73,23 @@ func SelectCoordis(month string, year string) ([]getCoordi,error) {
 	
 	return coordiList,err
 }
+
+
+func DeleteCoordi(id int) (sql.Result, error) {
+
+	password := os.Getenv("DB_password")
+	fmt.Println(password)
+	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
+
+	db, err := sql.Open("mysql", dataSourceName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
+	fmt.Println(result)
+
+	return result, err
+ 
+}
