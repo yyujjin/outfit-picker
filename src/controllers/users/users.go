@@ -13,7 +13,6 @@ import (
 )
 
 //회원가입 API
-//err 1234
 func SignUp(c *gin.Context) {
 	
 	password := os.Getenv("DB_password")
@@ -24,7 +23,7 @@ func SignUp(c *gin.Context) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-//생일 필수값 안해도 될것같음 , 폰넘버도
+
 	type signup struct {
 		Id string `json:"id" binding:"required"` 
 		Password string `json:"password" binding:"required"` 
@@ -35,9 +34,9 @@ func SignUp(c *gin.Context) {
 	}
 
 	var data signup
-//err재할당 
-	if err1 := c.BindJSON(&data); err1 != nil {
-		fmt.Println(err1)
+
+	if err = c.BindJSON(&data); err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"message": "필수 값을 입력해 주세요",
@@ -57,15 +56,16 @@ func SignUp(c *gin.Context) {
 
 	pass := []byte(data.Password)
 
+	//TODO: 여기서는 err 재할당을 할수없는것인가? err말고 다른 변수명써야하나?
 	hash, err3 := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
 	if err3 != nil {
 		panic(err3)
 	}
 	fmt.Println(string(hash))
 	
-	err4 := login.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+	err= login.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
 
-	if err4 != nil {
+	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
 			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",

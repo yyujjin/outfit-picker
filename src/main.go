@@ -11,11 +11,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//TODO: 패키지가 자동으로 등록될때는 언제??
-//원래 지원하는 함수 (내장패키지)는 자동으로 입력 됨.
-//http방법
-//구조체는 함수안에? 함수밖에?
-
 
 // 코드 구조
 // 1. 컨트롤러 2. 서비스 3. 모델
@@ -47,7 +42,6 @@ r.POST("/api/users", users.SignUp)
 //사용자의 코디 기록에서 해당하는 정보를 삭제하는 API
 	r.DELETE("/api/coordis/:id",coordis.DeleteCoordiLog )
 
-//TODO: README 작성해야함 
 //카테고리 리스트를 프론트로 전달 
 r.GET("/api/categories", categories.GetCategories)
 

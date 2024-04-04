@@ -23,7 +23,6 @@ func AddItem (c *gin.Context){
 	}
 	defer db.Close()
 
-//id필요 없을 듯 
 	type postItem struct {
 		ItemId int `json:"itemId"`
 		ItemName string `json:"itemName"`
@@ -41,7 +40,7 @@ func AddItem (c *gin.Context){
 		})
 		return
 	}
-	//근데 result 는 무슨 값이지?
+
 	result, err := db.Exec("INSERT INTO closet (name, category,image) VALUES (?,?,?) ", addItem.ItemName, addItem.Category, addItem.Image)
 	if err != nil {
 		log.Fatal(err)
@@ -81,7 +80,7 @@ func GetClothingItems(c *gin.Context) {
 		log.Fatal(err)
 	}
 	
-	defer rows.Close() //반드시 닫는다 (지연하여 닫기)
+	defer rows.Close() 
 	item := []getItem{}
 
 	// 
@@ -113,7 +112,6 @@ func DeleteItem(c *gin.Context) {
 	}
 	defer db.Close()
 
-	//시맨틱은 이렇게 써야지만 되는거 
 	id, err := strconv.Atoi(c.Param("id"))
 	fmt.Println(id, err)
 	if err != nil {

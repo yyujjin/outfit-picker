@@ -11,7 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func oook () *sql.DB{
+//TODO: 질문 
+//*이건 왜 붙은거야? 포인터?
+func database () *sql.DB{
 	//데이터베이스랑 연결된 상태를 db변수가 보관하고 있는거다. 
 	//db 변수 역할 => db connection
 	//함수로 쓰려면 db내보내서 변수에 저장 
@@ -31,8 +33,6 @@ func oook () *sql.DB{
 
 //사용자가 착용한 옷 사진을 업로드하고 이를 날짜,기온,날씨와 함께 기록하는 API
 func LogCoordis(c *gin.Context) {
-
-	oook()
 	
 	type coordi struct {
 		Date string `json:"date" binding:"required"` 
@@ -51,8 +51,10 @@ func LogCoordis(c *gin.Context) {
 		return
 	}
 	
-//변수에 저장 
-	db := oook()
+//TODO: 만약 db 변수 명을 바꾼다면 
+	db := database()
+	// 밑에 db도 바꿔야함??
+	//db는 패키지이름 아니었어? 왜 변수로 뜨지?
 	result, err := db.Exec(
 		"INSERT INTO coordi (date, photo,temperature,weather) VALUES (?,?,?,?) ", 
 		registerCoordi.Date, registerCoordi.Photo, registerCoordi.Temperature,registerCoordi.Weather,
@@ -84,7 +86,7 @@ func GetCoordiLogs(c *gin.Context) {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	//식을 쓰는 건 프론트 함수를 써서 받는건 백엔드 
+
 	month := c.Query("month")
 	year := c.Query("year")
 
@@ -161,10 +163,14 @@ func DeleteCoordiLog(c *gin.Context) {
 		return
 	}
 
+	//TODO: 질문
+	//result 값이 어떻게 나오는지?
+	//Exec는 결과 행을 반환하지 않고 쿼리를 실행한다는데 result 값이 어떻게 나오는건지 (삭제되면 1, or 0 이런건가)
+	
 	result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
 	fmt.Println(result)
  
-	// 지피티가 알려준건데 이거 맞을까?
+	//결과 값을 반환하지 않는데 어떻게 이걸 실행할 수가 있는거지
 	rowCount, _ := result.RowsAffected()
 	if  rowCount == 0 {
 		c.JSON(http.StatusNotFound, gin.H{
