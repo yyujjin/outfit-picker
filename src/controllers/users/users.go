@@ -1,11 +1,8 @@
 package users
 
 import (
-	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 	"outfit-picker/src/models/authdb"
 
 	"github.com/gin-gonic/gin"
@@ -15,15 +12,6 @@ import (
 //회원가입 API
 func SignUp(c *gin.Context) {
 	
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
 	type signup struct {
 		Id string `json:"id" binding:"required"` 
 		Password string `json:"password" binding:"required"` 
@@ -35,7 +23,7 @@ func SignUp(c *gin.Context) {
 
 	var data signup
 
-	if err = c.BindJSON(&data); err != nil {
+	if err := c.BindJSON(&data); err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
@@ -44,8 +32,8 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	
 	count := authdb.GetUserCount(data.Id)
+
 	if count > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
@@ -56,14 +44,13 @@ func SignUp(c *gin.Context) {
 
 	pass := []byte(data.Password)
 
-	//TODO: 여기서는 err 재할당을 할수없는것인가? err말고 다른 변수명써야하나?
 	hash, err3 := bcrypt.GenerateFromPassword(pass, bcrypt.DefaultCost)
 	if err3 != nil {
 		panic(err3)
 	}
 	fmt.Println(string(hash))
 	
-	err= authdb.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+	err := authdb.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
