@@ -1,5 +1,6 @@
-package login
+package auth
 
+//auth로해서 user에 있는거랑 login에 있는거랑 합쳐?
 import (
 	"database/sql"
 	"fmt"
@@ -54,9 +55,9 @@ func CheckDuplicateID(id string) (string, error) {
 	}
 	defer db.Close()
 
-	var userPassword string
+	var userPass string
 
-	err = db.QueryRow("SELECT password FROM user WHERE user_id = ?", id).Scan(&userPassword)
+	err = db.QueryRow("SELECT password FROM user WHERE user_id = ?", id).Scan(&userPass)
 
-	return userPassword, err
+	return userPass, err
 }

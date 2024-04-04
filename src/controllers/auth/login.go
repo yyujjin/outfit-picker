@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
-
+	"outfit-picker/src/models/auth"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -28,7 +28,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	var userPass string
 
 	// !!! db 어쩌고 빨간색 에러뜨면 아래 코드 복사하셈
 	password := os.Getenv("DB_password")
@@ -42,11 +41,10 @@ func Login(c *gin.Context) {
 	// !!!!!!!
 
 
-//변수를 만들어서 거기에 값을 스캔하고 그 스캔된 값으로 해쉬 검사 
-//이거하기 
-	// userPassword,err := login.CheckDuplicateID(data.Id)
+//TODO: 
+	userPassword,err1 := auth.CheckDuplicateID(data.Id)
 
-	if err != nil {
+	if err1 != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
@@ -54,7 +52,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if bcrypt.CompareHashAndPassword([]byte(userPass), []byte(data.Password)) != nil {
+	if bcrypt.CompareHashAndPassword([]byte(userPassword), []byte(data.Password)) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",

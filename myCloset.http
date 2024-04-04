@@ -1,4 +1,4 @@
-#Add MyCloset
+
 POST http://localhost:8080/items
 Content-Type: application/json
 
