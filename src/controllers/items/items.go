@@ -1,27 +1,16 @@
 package items
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+	"outfit-picker/src/models/itemsdb"
 	"strconv"
-
 	"github.com/gin-gonic/gin"
 )
 
 //프론트엔드에서 사용자의 옷장에 아이템을 추가하기 위한 API
 func AddItem (c *gin.Context){
-//이거 함수 바깥에 했더니 안되던데 그러면 안됨?
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
 
 	type postItem struct {
 		ItemId int `json:"itemId"`
@@ -40,12 +29,13 @@ func AddItem (c *gin.Context){
 		})
 		return
 	}
+	
+	err := itemsdb.InserItem(addItem.ItemName, addItem.Category, addItem.Image)
 
-	result, err := db.Exec("INSERT INTO closet (name, category,image) VALUES (?,?,?) ", addItem.ItemName, addItem.Category, addItem.Image)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(result)
+	
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
 		"message": "추가가 완료되었습니다!",
@@ -55,15 +45,6 @@ func AddItem (c *gin.Context){
 //자신의 옷장에 추가한 전체 의류 아이템을 확인하기 위한 API	
 func GetClothingItems(c *gin.Context) {
 
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
 	type getItem struct {
 		Id int `json:"id"`
 		Name string `json:"name"`
@@ -71,20 +52,24 @@ func GetClothingItems(c *gin.Context) {
 		Image string `json:"image"`
 	}
 
-	var id int
-	var name string
-	var category string	
-	var image string
-	rows, err := db.Query("SELECT closet.id, closet.name, cl.name as category, closet.image FROM closet join categorylist cl on closet.category=cl.id ")
+	
+	rows, err := itemsdb.SeleteItems() 
+
 	if err != nil {
 		log.Fatal(err)
 	}
 	
 	defer rows.Close() 
+
 	item := []getItem{}
 
-	// 
 	for rows.Next() {
+
+		var id int
+		var name string
+		var category string	
+		var image string
+
 		err := rows.Scan(&id, &name, &category, &image)
 		if err != nil {
 			log.Fatal(err)  
@@ -103,17 +88,9 @@ func GetClothingItems(c *gin.Context) {
 //사용자의 옷장에서 선택한 아이템을 제거하기 위한 API
 func DeleteItem(c *gin.Context) {
 
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
 	id, err := strconv.Atoi(c.Param("id"))
 	fmt.Println(id, err)
+
 	if err != nil {
 		fmt.Println("경고")
 		c.IndentedJSON(http.StatusNotFound, gin.H{"status": "error",
@@ -122,8 +99,8 @@ func DeleteItem(c *gin.Context) {
 		return
 	}
 
-	result, err := db.Exec("DELETE FROM closet where id = ?",id) 
-	fmt.Println(result)
+	err = itemsdb.DeleteItem(id)
+
 	if err != nil {
 		log.Fatal(err)
 	}
