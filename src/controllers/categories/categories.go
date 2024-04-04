@@ -2,7 +2,7 @@ package categories
 
 import (
 	"net/http"
-	"outfit-picker/src/models/auth/categorydb"
+	"outfit-picker/src/models/categorydb"
 
 	"github.com/gin-gonic/gin"
 )
