@@ -7,12 +7,7 @@ import (
 	"os"
 )
 
-type category struct {
-	Id   int
-	Name string
-}
-
-func GetCategoryList() []category {
+func SelectCategories() (*sql.Rows,error){
 
 	password := os.Getenv("DB_password")
 	fmt.Println(password)
@@ -24,30 +19,7 @@ func GetCategoryList() []category {
 	}
 	defer db.Close()
 
-	categoryList := []category{}
-
 	rows, err := db.Query("SELECT * FROM categorylist ORDER BY id ASC;")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close() 
-	
 
-	for rows.Next() {
-
-		var id int
-		var name string
-
-		err := rows.Scan(&id, &name)
-
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		categoryList = append(categoryList, category{id, name})
-		fmt.Println(id, name)
-	}
-
-	return categoryList
-
+	return rows, err
 }
