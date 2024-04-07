@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"outfit-picker/src/models/categorydb"
+
 	"github.com/gin-gonic/gin"
 )
 
