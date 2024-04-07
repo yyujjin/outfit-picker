@@ -24,7 +24,7 @@ func InsertCoordi(data string, photo string, temperature int, weather int) error
 	return err
 }
 
-func SelectCoordis(fisrt string)(*sql.Rows, error) {
+func SelectCoordis(first string)(*sql.Rows, error) {
 
 	password := os.Getenv("DB_password")
 	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
