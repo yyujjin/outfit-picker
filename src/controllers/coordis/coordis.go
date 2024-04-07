@@ -3,32 +3,11 @@ package coordis
 import (
 	"fmt"
 	"net/http"
-	"os"
 	"outfit-picker/src/models/coordisdb"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
-
-//TODO: 질문 
-//*이건 왜 붙은거야? 포인터?
-func database () *sql.DB{
-	//데이터베이스랑 연결된 상태를 db변수가 보관하고 있는거다. 
-	//db 변수 역할 => db connection
-	//함수로 쓰려면 db내보내서 변수에 저장 
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
-
-	return db
-
-}
-
 
 //사용자가 착용한 옷 사진을 업로드하고 이를 날짜,기온,날씨와 함께 기록하는 API
 func LogCoordis(c *gin.Context) {
@@ -40,9 +19,9 @@ func LogCoordis(c *gin.Context) {
 		Weather int `json:"weather" binding:"required"`
 	}
 
-	var registerCoordi coordi
+	var data coordi
 
-	if err := c.ShouldBindJSON(&registerCoordi); err != nil {
+	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"message": "필수 입력값을 입력해주세요.",
@@ -59,7 +38,6 @@ func LogCoordis(c *gin.Context) {
 				})
 				return
 	} 
-	fmt.Println(result)
 
 	c.JSON(http.StatusOK, gin.H{
 		"status":  "success",
@@ -70,26 +48,12 @@ func LogCoordis(c *gin.Context) {
 
 //사용자가 착용한 코디 목록을 조회하는 API  
 func GetCoordiLogs(c *gin.Context) {
-	
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer db.Close()
 
 	month := c.Query("month")
 	year := c.Query("year")
 
 	fmt.Println(month,year)
-	var id int
-	var date string
-	var photo string
-	var temperature int
-	var weather int
-
+	
 	type getCoordi struct {
 		Id int `json:"id"`
 		Date string `json:"date"`
@@ -102,7 +66,8 @@ func GetCoordiLogs(c *gin.Context) {
 	first := year + "-" + month + "-" + "01"
 	fmt.Println(first)
 
-	rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
+	rows,err := coordisdb.SelectCoordis(first) 
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
@@ -111,9 +76,16 @@ func GetCoordiLogs(c *gin.Context) {
 		return
 	}
 	defer rows.Close() 
+
 	coordiList := []getCoordi{}
 
 	for rows.Next() {
+		var id int
+		var date string
+		var photo string
+		var temperature int
+		var weather int
+
 		err := rows.Scan(&id, &date, &photo, &temperature,&weather)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
@@ -124,6 +96,7 @@ func GetCoordiLogs(c *gin.Context) {
 		}
 		coordiList = append(coordiList, getCoordi{id,date,photo,temperature,weather})
 	}
+
 	if !rows.Next() {
 		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "error",
