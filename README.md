@@ -15,9 +15,15 @@
 
 ##### Request
 
-> | id(유저아이디)**필수** |  password(유저 비밀번호)**필수**  |  name(유저 이름)**필수**  | birthday(유저 생일)**필수**  | phoneNumber(유저 전화번호)**필수** | gender(유저 성별)
-> |----------|----------|-----------|----------|----------|-----------|
-> | string     |  string | string   |string     |  string | int (*0 = male,1 = female*)  |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id|필수|string|유저 아이디|
+> |password|필수|string|유저 비밀번호|
+> |name|필수|string|유저 이름|
+> |birthday|필수|string|유저 생일|
+> |phoneNumber|필수|string|유저 전화번호|
+> |gender|선택|int|유저 성별 ( 0 = male , 1 = female)|
+
 
 ##### Example JSON
 ```json
