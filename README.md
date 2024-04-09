@@ -22,7 +22,7 @@
 > |name|필수|string|유저 이름|
 > |birthday|필수|string|유저 생일|
 > |phoneNumber|필수|string|유저 전화번호|
-> |gender|선택|int|유저 성별 ( 0 = male , 1 = female)|
+> |gender|선택|int|유저 성별 ( **default** 0 = male  , 1 = female)|
 
 
 ##### Example JSON
