@@ -29,26 +29,11 @@ CREATE TABLE `closet` (
   `image` varchar(500) DEFAULT NULL COMMENT '아이템 이미지',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='아이템들을 보관하는 곳';
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='아이템들을 보관하는 곳';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `closet`
 --
 
-LOCK TABLES `closet` WRITE;
-/*!40000 ALTER TABLE `closet` DISABLE KEYS */;
-INSERT INTO `closet` VALUES (1,'12',1,'https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png'),(2,'12',1,'https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png'),(3,'12',1,'https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png'),(4,'12',1,'https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png');
-/*!40000 ALTER TABLE `closet` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2024-02-19 23:37:53
+-- Dump completed on 2024-04-09 23:06:03

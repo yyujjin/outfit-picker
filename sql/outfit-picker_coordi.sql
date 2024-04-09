@@ -16,26 +16,23 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `user`
+-- Table structure for table `coordi`
 --
 
-DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `coordi`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` varchar(45) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `name` varchar(45) NOT NULL,
-  `birthday` date NOT NULL,
-  `tel` varchar(45) NOT NULL,
-  `gender` tinyint unsigned NOT NULL COMMENT '0 male\n1 female',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  UNIQUE KEY `user-id_UNIQUE` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='사용자 테이블  ';
+CREATE TABLE `coordi` (
+  `id` int NOT NULL AUTO_INCREMENT COMMENT '옷　고유번호',
+  `date` datetime NOT NULL COMMENT '옷을　착용한　날　',
+  `photo` varchar(200) NOT NULL,
+  `temperature` tinyint DEFAULT NULL,
+  `weather` int NOT NULL COMMENT '０－＞맑음\\n１－＞흐림\\n２－＞비\\n３－＞눈',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='의상 착용 이력을 기록하는 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `user`
+-- Dumping data for table `coordi`
 --
+
