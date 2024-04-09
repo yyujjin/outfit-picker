@@ -36,7 +36,7 @@ POST http://localhost:8080/api/users
 
 {
 
-  "Id" : "O",
+  "Id" : "Ofg",
   "Password" : "GOING",
   "Name" : "세일러문",
   "Birthday" : "2004-12-14",

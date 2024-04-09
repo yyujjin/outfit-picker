@@ -6,23 +6,33 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
-func GetUserCount(userId string) int {
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
+type User struct {
+	Id           int          
+	User_id         string         
+	Password        string        
+	Name          string          
+	Birthday      time.Time    
+	Tel string 
+	Gender  int   
+  }
 
-	db, err := sql.Open("mysql", dataSourceName)
+func GetUserCount(userId string) int64 {
+	password := os.Getenv("DB_password")
+	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker?charset=utf8mb4&parseTime=True&loc=Local",password)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
-	var count int
-	err2 := db.QueryRow("SELECT count(*) FROM user WHERE user_id = ?", userId).Scan(&count) // id가 1인 학생을 조회
-	if err2 != nil {
-		log.Fatal(err)
-	}
+	var count int64
+	db.Model(&User{}).Table("user").Where("user_id = ?", userId).Count(&count)
 
 	return count
 }
