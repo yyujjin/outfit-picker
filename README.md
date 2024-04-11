@@ -102,26 +102,23 @@
 자신의 옷장에 추가한 전체 의류 아이템을 확인합니다.
 
 ##### Request
-
-> |name|type|data type|description|
->|---------|--------|----------|-----------|
-> |N/A|N/A|N/A|N/A|
+> N/A
 
 ##### Responses
 
 > |name|type|data type|description|
 >|---------|--------|----------|-----------|
-> |itemId|필수|int|아이템 아이디|
-> |itemName|필수|string|아이템 이름|
-> |category|필수|string|아이템 분류|
-> |image|필수|string|아이템 사진|
+> |id||int|아이템 아이디|
+> |name||string|아이템 이름|
+> |category||string|아이템 분류|
+> |image|필|string|아이템 사진|
 
 ##### Example JSON
 ```json
 [
   {
-    "itemId":1,
-    "itemName":"기모후드",
+    "id":1,
+    "name":"기모후드",
     "category":"아우터",
     "image":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
   }
@@ -228,9 +225,14 @@ http://localhost:8080/api/coordis?year=2024&month=04
 > |--------------------------|-----------------------------------|-------------------------|
 > | `200`         |        ||
 
->| id (목록 번호)  |  data (날짜)    | photo  (코디 사진) | temperature (기온) | weather (날씨)|
-> |----------|----------|-----------|----------|----------|
-> |int| string     |  string |int   |int|
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id||int|목록 번호|
+> |data||string|날짜|
+> |image||string|코디 사진|
+> |temperature||int|기온|
+> |weather||int|날씨|
+
 
 ##### Example JSON
 ```json
@@ -238,14 +240,14 @@ http://localhost:8080/api/coordis?year=2024&month=04
   {
     "id":1,
     "date":"2024-03-18",
-    "photo":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
+    "image":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
     "temperature" :10,
     "weather" :1
   },
   {
     "id":6,
     "date":"2024-03-24",
-    "photo":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
+    "image":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
     "temperature":15,
     "weather":0
   }
@@ -350,9 +352,7 @@ http://localhost:8080/api/coordis/4
 
 ##### Requests
 
-> |name|type|data type|description|
->|---------|--------|----------|-----------|
-> |N/A|N/A|N/A|N/A|
+> N/A
 
 ##### Responses
 
