@@ -68,6 +68,7 @@ func GetCoordiLogs(c *gin.Context) {
 
 	rows,err := coordisdb.SelectCoordis(first) 
 
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
@@ -78,7 +79,7 @@ func GetCoordiLogs(c *gin.Context) {
 	defer rows.Close() 
 
 	coordiList := []getCoordi{}
-
+	
 	for rows.Next() {
 		var id int
 		var date string
@@ -97,17 +98,15 @@ func GetCoordiLogs(c *gin.Context) {
 		coordiList = append(coordiList, getCoordi{id,date,photo,temperature,weather})
 	}
 
-	if !rows.Next() {
-		c.JSON(http.StatusNotFound, gin.H{
+	if len(coordiList) == 0 {
+			c.JSON(http.StatusNotFound, gin.H{
 			"status":  "error",
 			"message": "해당하는 날짜의 코디가 없습니다.",
 		})
 		return
 	}
-
-	c.IndentedJSON(http.StatusOK, gin.H{
-		"data": coordiList,
-	})
+	
+	c.IndentedJSON(http.StatusOK,coordiList)
 }
 
 //사용자의 코디 기록에서 해당하는 정보를 삭제하는 API

@@ -21,7 +21,7 @@ GET http://localhost:8080/api/categories
 POST http://localhost:8080/api/coordis
 
 {
-  "date": "2023-02-28",
+  "date": "2023-04-01",
 	"photo":" ",
 	"temperature": 0,
 	"weather": 0
@@ -45,7 +45,7 @@ POST http://localhost:8080/api/users
 }
 
 ###
-DELETE http://localhost:8080/api/coordis/3
+DELETE http://localhost:8080/api/coordis/7
 
 ###
 POST  http://localhost:8080/api/login
