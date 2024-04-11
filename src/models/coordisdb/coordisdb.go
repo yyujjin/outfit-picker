@@ -5,22 +5,52 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
-func InsertCoordi(data string, photo string, temperature int, weather int) error {
+type Coordi struct {
+	Date string
+	Photo string
+	Temperature int
+	Weather int
+}
 
+func ConnectDB() (*gorm.DB,error) {
 	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
+	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // 단수형 테이블명을 사용합니다. 기본적으로 GORM은 복수형 테이블명 규칙이 적용되는데 true로 설정하면 구조체 이름 그대로 테이블명을 생성합니다.
+		  },
+	})
+	return db,err
+}
 
-	db, err := sql.Open("mysql", dataSourceName)
+
+
+func InsertCoordi(date string, photo string, temperature int, weather int) error {
+
+	db,err := ConnectDB()
+	
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	defer db.Close()
 
-	_, err = db.Exec("INSERT INTO coordi (date, photo,temperature,weather) VALUES (?,?,?,?) ",
-	data, photo, temperature, weather)
+	coordi := Coordi{date,photo,temperature,weather}
+	
+	//coordi에 저장돼 있는 데이터를 뽑아다가 db에 저장시키겠다. 
+	result := db.Create(&coordi)
 
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		return result.Error
+	}
+
+	fmt.Println("입력된 행의 갯수",result.RowsAffected)
+	
 	return err
 }
 

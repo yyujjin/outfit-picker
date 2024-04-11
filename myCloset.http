@@ -22,7 +22,7 @@ POST http://localhost:8080/api/coordis
 
 {
   "date": "2023-04-01",
-	"photo":" ",
+	"photo":"성공인가요..?",
 	"temperature": 0,
 	"weather": 0
 }
