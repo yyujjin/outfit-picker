@@ -111,7 +111,7 @@
 > |id||int|아이템 아이디|
 > |name||string|아이템 이름|
 > |category||string|아이템 분류|
-> |image|필|string|아이템 사진|
+> |image||string|아이템 사진|
 
 ##### Example JSON
 ```json
