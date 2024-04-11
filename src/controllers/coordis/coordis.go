@@ -16,10 +16,10 @@ func LogCoordis(c *gin.Context) {
 		Date string `json:"date" binding:"required"` 
 		Photo string `json:"photo" binding:"required"`
 		Temperature int `json:"temperature"`
-		Weather int `json:"weather" binding:"required"`
+		Weather *int `json:"weather" binding:"required"`
 	}
 
-	var data coordi
+	data := &coordi{}
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -29,7 +29,7 @@ func LogCoordis(c *gin.Context) {
 		return
 	}
 	
-	err := coordisdb.InsertCoordi(data.Date,data.Photo,data.Temperature,data.Weather)
+	err := coordisdb.InsertCoordi(data.Date,data.Photo,data.Temperature,*data.Weather)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
