@@ -12,14 +12,14 @@ import (
 //프론트엔드에서 사용자의 옷장에 아이템을 추가하기 위한 API
 func AddItem (c *gin.Context){
 
-	type postItem struct {
-		ItemId int `json:"itemId"`
-		ItemName string `json:"itemName"`
-		Category int    `json:"category"`
-		Image    string `json:"image"`
-	}
+	// type postItem struct {
+	// 	ItemId uint `json:"itemId"`
+	// 	ItemName string `json:"itemName"`
+	// 	Category int    `json:"category"`
+	// 	Image    string `json:"image"`
+	// }
 
-	var addItem postItem
+	var addItem itemsdb.Closet
 
 	if err := c.BindJSON(&addItem); err != nil {
 		fmt.Println(err)
@@ -29,8 +29,9 @@ func AddItem (c *gin.Context){
 		})
 		return
 	}
-	
-	err := itemsdb.InserItem(addItem.ItemName, addItem.Category, addItem.Image)
+	//클라이언트에서 itmeID를 안넘겨줘도 (=기본값0)
+	//GORM에서 ID는 프라이머리키라서 자동으로 DB에 등록됨. 
+	err := itemsdb.InserItem(addItem.Id,addItem.Name, addItem.Category, addItem.Image)
 
 	if err != nil {
 		log.Fatal(err)
