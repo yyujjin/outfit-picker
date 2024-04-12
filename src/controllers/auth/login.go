@@ -12,12 +12,8 @@ import (
 )
 
 func Login(c *gin.Context) {
-	type login struct {
-		UserId       string `json:"userId" binding:"required"`
-		Password string `josn:"password" binding:"required"`
-	}
 
-	var data login
+	var data authdb.User
 
 	if err := c.BindJSON(&data); err != nil {
 		// fmt.Println(err)

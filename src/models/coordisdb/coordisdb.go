@@ -11,11 +11,12 @@ import (
 )
 
 type Coordi struct {
+
 	Id uint
-	Date string
-	Photo string
-	Temperature int
-	Weather int
+	Date string `json:"date" binding:"required"` 
+	Photo string `json:"photo" binding:"required"`
+	Temperature int `json:"temperature"`
+	Weather *int `json:"weather" binding:"required"`
 }
 
 func ConnectDB() (*gorm.DB,error) {
@@ -31,7 +32,7 @@ func ConnectDB() (*gorm.DB,error) {
 
 
 
-func InsertCoordi(id uint,date string, photo string, temperature int, weather int) error {
+func InsertCoordi(id uint,date string, photo string, temperature int, weather *int) error {
 
 	db,err := ConnectDB()
 	if err != nil {
@@ -79,7 +80,7 @@ func SelectCoordis(first string)([]Coordi) {
 }
 
 
-func DeleteCoordi(id int) *gorm.DB {
+func DeleteCoordi(id uint) *gorm.DB {
 
 	db,err := ConnectDB()
 	if err != nil {

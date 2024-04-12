@@ -19,8 +19,7 @@ func LogCoordis(c *gin.Context) {
 		Temperature int `json:"temperature"`
 		Weather *int `json:"weather" binding:"required"`
 	}
-
-	data := &coordi{}
+	data := &coordisdb.Coordi{}
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -30,7 +29,7 @@ func LogCoordis(c *gin.Context) {
 		return
 	}
 	
-	err := coordisdb.InsertCoordi(data.Id,data.Date,data.Photo,data.Temperature,*data.Weather)
+	err := coordisdb.InsertCoordi(data.Id,data.Date,data.Photo,data.Temperature,data.Weather)
 	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -80,7 +79,7 @@ func DeleteCoordiLog(c *gin.Context) {
 		return
 	}
 
-	result := coordisdb.DeleteCoordi(id)
+	result := coordisdb.DeleteCoordi(uint(id))
 
 	if result.Error != nil {
 		c.IndentedJSON(http.StatusInternalServerError, gin.H{

@@ -12,17 +12,7 @@ import (
 //회원가입 API
 func SignUp(c *gin.Context) {
 	
-	type signup struct {
-		Id uint
-		UserId string `json:"userid" binding:"required"` 
-		Password string `json:"password" binding:"required"` 
-		Name string `json:"name" binding:"required"` 
-		Birthday string `json:"birthday" binding:"required"`  
-		PhoneNumber string `json:"phoneNumber" binding:"required"` 
-		Gender int `json:"gender" ` 
-	}
-
-	var data signup
+	var data authdb.User
 
 	if err := c.BindJSON(&data); err != nil {
 		fmt.Println(err)
@@ -51,7 +41,7 @@ func SignUp(c *gin.Context) {
 	}
 	fmt.Println(string(hash))
 	
-	err := authdb.InsertUser(data.Id,data.UserId,[]byte(hash), data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+	err := authdb.InsertUser(data.Id,data.UserId,[]byte(hash), data.Name, data.Birthday, data.Tel, data.Gender)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
