@@ -46,42 +46,14 @@ func AddItem (c *gin.Context){
 //자신의 옷장에 추가한 전체 의류 아이템을 확인하기 위한 API	
 func GetClothingItems(c *gin.Context) {
 
-	type getItem struct {
-		Id int `json:"id"`
-		Name string `json:"name"`
-		Category string `json:"category"`
-		Image string `json:"image"`
-	}
-
-	
-	rows, err := itemsdb.SeleteItems() 
+	closets, err := itemsdb.SeleteItems() 
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	defer rows.Close() 
-
-	item := []getItem{}
-
-	for rows.Next() {
-
-		var id int
-		var name string
-		var category string	
-		var image string
-
-		err := rows.Scan(&id, &name, &category, &image)
-		if err != nil {
-			log.Fatal(err)  
-		}
-		
-		item = append(item, getItem{id, name, category, image})
-		fmt.Println(id, name, category, image)
-	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"data": item,
+		"data": closets,
 	})
 }
 

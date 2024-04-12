@@ -48,21 +48,18 @@ func InserItem(id uint, name string, category int, image string) error {
 }
 
 
-func SeleteItems() (*sql.Rows, error) {
+func SeleteItems() ([]Closet, error) {
 
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
+	db,err := ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
-
 	
-	rows, err := db.Query("SELECT closet.id, closet.name, cl.name as category, closet.image FROM closet join categorylist cl on closet.category=cl.id ")
+	closets := []Closet{}
+	db.Raw("SELECT closet.id, closet.name, cl.name as category, closet.image FROM closet join categorylist cl on closet.category=cl.id ").Scan(&closets)
+	// rows, err := db.Query("SELECT closet.id, closet.name, cl.name as category, closet.image FROM closet join categorylist cl on closet.category=cl.id ")
 
-	return rows, err
+	return closets, err
 }
 
 func DeleteItem(id int) error {
