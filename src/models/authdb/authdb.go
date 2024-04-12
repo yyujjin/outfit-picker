@@ -1,8 +1,6 @@
 package authdb
 
-
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -68,19 +66,16 @@ func InsertUser(id uint,userId string, hash []byte, name string ,birthday string
 }
 
 
-func GetPassword(id string) (string, error) {
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
+func GetPassword(userId string) (*gorm.DB,string) {
+	db,err := ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
 	var userPass string
 
-	err = db.QueryRow("SELECT password FROM user WHERE user_id = ?", id).Scan(&userPass)
+	result := db.Model(&User{}).Where("user_id = ?", userId).Select("password").Find(&userPass);
 
-	return userPass, err
+fmt.Println(userPass)
+	return result,userPass
 }
