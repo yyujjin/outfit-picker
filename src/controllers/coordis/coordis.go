@@ -30,13 +30,13 @@ func LogCoordis(c *gin.Context) {
 	}
 	
 	err := coordisdb.InsertCoordi(data.Date,data.Photo,data.Temperature,*data.Weather)
-
+	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-					"status":  "error",
-					"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
-				})
-				return
+			"status":  "error",
+			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
+		})
+		return
 	} 
 
 	c.JSON(http.StatusOK, gin.H{
@@ -54,51 +54,12 @@ func GetCoordiLogs(c *gin.Context) {
 
 	fmt.Println(month,year)
 	
-	type getCoordi struct {
-		Id int `json:"id"`
-		Date string `json:"date"`
-		Photo string `json:"photo"`
-		Temperature int `json:"temperature"`
-		Weather int `json:"weather"`
-	}
-
 	// date >= '2024-02-01' and date <'2024-03-01'
 	first := year + "-" + month + "-" + "01"
 	fmt.Println(first)
 
-	rows,err := coordisdb.SelectCoordis(first) 
-
-
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"status":  "error",
-			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
-		})
-		return
-	}
-	defer rows.Close() 
-
-	coordiList := []getCoordi{}
-	
-	for rows.Next() {
-		var id int
-		var date string
-		var photo string
-		var temperature int
-		var weather int
-
-		err := rows.Scan(&id, &date, &photo, &temperature,&weather)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"status":  "error",
-				"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
-			})
-			return
-		}
-		coordiList = append(coordiList, getCoordi{id,date,photo,temperature,weather})
-	}
-
-	if len(coordiList) == 0 {
+	getCoordis := coordisdb.SelectCoordis(first) 
+	if len(getCoordis) == 0 {
 			c.JSON(http.StatusNotFound, gin.H{
 			"status":  "error",
 			"message": "해당하는 날짜의 코디가 없습니다.",
@@ -106,7 +67,7 @@ func GetCoordiLogs(c *gin.Context) {
 		return
 	}
 	
-	c.IndentedJSON(http.StatusOK,coordiList)
+	c.IndentedJSON(http.StatusOK,getCoordis)
 }
 
 //사용자의 코디 기록에서 해당하는 정보를 삭제하는 API

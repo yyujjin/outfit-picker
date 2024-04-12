@@ -34,7 +34,6 @@ func ConnectDB() (*gorm.DB,error) {
 func InsertCoordi(date string, photo string, temperature int, weather int) error {
 
 	db,err := ConnectDB()
-	
 	if err != nil {
 		return err
 	}
@@ -54,21 +53,31 @@ func InsertCoordi(date string, photo string, temperature int, weather int) error
 	return err
 }
 
-func SelectCoordis(first string)(*sql.Rows, error) {
-
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
+func SelectCoordis(first string)([]Coordi) {
+//TODO: first 사용해서 조건문 완성해야함 
+	db,err := ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	coordis := []Coordi{}
+	rows, err := db.Model(&Coordi{}).Where("weather=?",0).Rows()
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	// rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
 
-	rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
+	for rows.Next() {
+		var coordi Coordi
+		db.ScanRows(rows,&coordi) //coordi라는 변수에 내가 보낸 구조체 형식대로 저장해
+		coordis = append(coordis,Coordi(coordi))
+	}
 
-	return	rows, err
+	fmt.Println(coordis)
+
+	return	coordis
 }
+
 
 func DeleteCoordi(id int) (sql.Result,error) {
 
