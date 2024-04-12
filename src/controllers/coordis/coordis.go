@@ -13,6 +13,7 @@ import (
 func LogCoordis(c *gin.Context) {
 	
 	type coordi struct {
+		Id uint
 		Date string `json:"date" binding:"required"` 
 		Photo string `json:"photo" binding:"required"`
 		Temperature int `json:"temperature"`
@@ -29,7 +30,7 @@ func LogCoordis(c *gin.Context) {
 		return
 	}
 	
-	err := coordisdb.InsertCoordi(data.Date,data.Photo,data.Temperature,*data.Weather)
+	err := coordisdb.InsertCoordi(data.Id,data.Date,data.Photo,data.Temperature,*data.Weather)
 	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -79,21 +80,20 @@ func DeleteCoordiLog(c *gin.Context) {
 		return
 	}
 
-	result, err := coordisdb.DeleteCoordi(id)
-	
-	rowCount, _ := result.RowsAffected()
-	if  rowCount == 0 {
-		c.JSON(http.StatusNotFound, gin.H{
+	result := coordisdb.DeleteCoordi(id)
+
+	if result.Error != nil {
+		c.IndentedJSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
-			"message": "해당하는 ID를 찾을 수 없습니다.",
+			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 		})
 		return
 	}
 
-	if err != nil {
-		c.IndentedJSON(http.StatusInternalServerError, gin.H{
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
 			"status":  "error",
-			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
+			"message": "해당하는 ID를 찾을 수 없습니다.",
 		})
 		return
 	}

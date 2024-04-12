@@ -1,7 +1,6 @@
 package coordisdb
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -12,6 +11,7 @@ import (
 )
 
 type Coordi struct {
+	Id uint
 	Date string
 	Photo string
 	Temperature int
@@ -31,14 +31,14 @@ func ConnectDB() (*gorm.DB,error) {
 
 
 
-func InsertCoordi(date string, photo string, temperature int, weather int) error {
+func InsertCoordi(id uint,date string, photo string, temperature int, weather int) error {
 
 	db,err := ConnectDB()
 	if err != nil {
 		return err
 	}
 
-	coordi := Coordi{date,photo,temperature,weather}
+	coordi := Coordi{id,date,photo,temperature,weather}
 	
 	//coordi에 저장돼 있는 데이터를 뽑아다가 db에 저장시키겠다. 
 	result := db.Create(&coordi)
@@ -79,18 +79,17 @@ func SelectCoordis(first string)([]Coordi) {
 }
 
 
-func DeleteCoordi(id int) (sql.Result,error) {
+func DeleteCoordi(id int) *gorm.DB {
 
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
+	db,err := ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
-	result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
+	// db.Where("id = ?",id).Delete(&Coordi)//구조체에 id필드가 없어서 에러발생 
+	
+	result := db.Delete(&Coordi{},id)
+	// result, err := db.Exec("DELETE FROM coordi where id = ?",id) 
 
-	return result, err
+	return result
 }
