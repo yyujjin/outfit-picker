@@ -12,13 +12,6 @@ import (
 //프론트엔드에서 사용자의 옷장에 아이템을 추가하기 위한 API
 func AddItem (c *gin.Context){
 
-	// type postItem struct {
-	// 	ItemId uint `json:"itemId"`
-	// 	ItemName string `json:"itemName"`
-	// 	Category int    `json:"category"`
-	// 	Image    string `json:"image"`
-	// }
-
 	var addItem itemsdb.Closet
 
 	if err := c.BindJSON(&addItem); err != nil {
@@ -72,12 +65,20 @@ func DeleteItem(c *gin.Context) {
 		return
 	}
 
-	err = itemsdb.DeleteItem(id)
+	result := itemsdb.DeleteItem(uint(id))
 
-	if err != nil {
+	if result.Error != nil {
 		log.Fatal(err)
 	}
 
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  "error",
+			"message": "해당하는 ID를 찾을 수 없습니다.",
+		})
+		return
+	}
+	
 	c.IndentedJSON(http.StatusOK, "삭제가 완료되었습니다!")
 
 }

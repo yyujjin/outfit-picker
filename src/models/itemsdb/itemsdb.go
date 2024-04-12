@@ -1,7 +1,6 @@
 package itemsdb
 
 import (
-	"database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -62,19 +61,14 @@ func SeleteItems() ([]Closet, error) {
 	return closets, err
 }
 
-func DeleteItem(id int) error {
-
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
+func DeleteItem(id uint) *gorm.DB {
+	db,err := ConnectDB()
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
 
-	_, err = db.Exec("DELETE FROM closet where id = ?",id) 
+	result := db.Delete(&Closet{},id)
 
-	return err
+	return result
 
 }
