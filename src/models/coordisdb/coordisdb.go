@@ -40,7 +40,7 @@ func InsertCoordi(id uint,date string, photo string, temperature int, weather in
 
 	coordi := Coordi{id,date,photo,temperature,weather}
 	
-	//coordi에 저장돼 있는 데이터를 뽑아다가 db에 저장시키겠다. 
+	//coordi에 저장돼 있는 데이터로 db를 만들겠다.  
 	result := db.Create(&coordi)
 
 	if result.Error != nil {

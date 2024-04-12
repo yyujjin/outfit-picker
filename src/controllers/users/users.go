@@ -13,7 +13,8 @@ import (
 func SignUp(c *gin.Context) {
 	
 	type signup struct {
-		Id string `json:"id" binding:"required"` 
+		Id uint
+		UserId string `json:"userid" binding:"required"` 
 		Password string `json:"password" binding:"required"` 
 		Name string `json:"name" binding:"required"` 
 		Birthday string `json:"birthday" binding:"required"`  
@@ -32,7 +33,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	count := authdb.GetUserCount(data.Id)
+	count := authdb.GetUserCount(data.UserId)
 
 	if count > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -50,7 +51,7 @@ func SignUp(c *gin.Context) {
 	}
 	fmt.Println(string(hash))
 	
-	err := authdb.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+	err := authdb.InsertUser(data.Id,data.UserId,[]byte(hash), data.Name, data.Birthday, data.PhoneNumber, data.Gender)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

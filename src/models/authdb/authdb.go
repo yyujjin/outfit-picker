@@ -1,34 +1,43 @@
 package authdb
 
-//auth로해서 user에 있는거랑 login에 있는거랑 합쳐?
+
 import (
 	"database/sql"
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/schema"
 )
 
 type User struct {
-	Id           int          
-	User_id         string         
-	Password        string        
-	Name          string          
-	Birthday      time.Time    
+	Id uint        
+	UserId string         
+	Password string        
+	Name string          
+	Birthday string    
 	Tel string 
 	Gender  int   
   }
 
-func GetUserCount(userId string) int64 {
+  func ConnectDB() (*gorm.DB,error) {
 	password := os.Getenv("DB_password")
-	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker?charset=utf8mb4&parseTime=True&loc=Local",password)
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	
+	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true, // 단수형 테이블명을 사용합니다. 기본적으로 GORM은 복수형 테이블명 규칙이 적용되는데 true로 설정하면 구조체 이름 그대로 테이블명을 생성합니다.
+		  },
+	})
+	return db,err
+}
+
+
+func GetUserCount(userId string) int64 {
+	db,err := ConnectDB()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal()
 	}
 
 	var count int64
@@ -38,20 +47,24 @@ func GetUserCount(userId string) int64 {
 }
 
 
-func InsertUser(id string, hash []byte, name string ,birthday string, phoneNumber string, gender int) error{
-	password := os.Getenv("DB_password")
-	dataSourceName := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
-
-	db, err := sql.Open("mysql", dataSourceName)
+func InsertUser(id uint,userId string, hash []byte, name string ,birthday string, phoneNumber string, gender int) error{
+	db,err := ConnectDB()
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-	defer db.Close()
 
-	_, err4 := db.Exec("INSERT INTO user (user_id, password,name,birthday,tel,gender) VALUES (?,?,?,?,?,?) ",
-	id, hash, name, birthday, phoneNumber, gender)
+	userinfo := User{id,userId,string(hash),name,birthday,phoneNumber,gender}
 
-	return err4
+	result := db.Create(&userinfo)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		return result.Error
+	}
+
+	fmt.Println("입력된 행의 갯수",result.RowsAffected)
+
+	return err
 }
 
 
