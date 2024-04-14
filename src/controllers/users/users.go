@@ -48,6 +48,7 @@ func SignUp(c *gin.Context) {
 			"status":  "error",
 			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 		})
+		fmt.Println("여기서 에러발생")
 		return
 	}
 	c.IndentedJSON(http.StatusOK, data)

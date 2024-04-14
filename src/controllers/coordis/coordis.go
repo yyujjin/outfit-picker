@@ -12,13 +12,6 @@ import (
 //사용자가 착용한 옷 사진을 업로드하고 이를 날짜,기온,날씨와 함께 기록하는 API
 func LogCoordis(c *gin.Context) {
 	
-	type coordi struct {
-		Id uint
-		Date string `json:"date" binding:"required"` 
-		Photo string `json:"photo" binding:"required"`
-		Temperature int `json:"temperature"`
-		Weather *int `json:"weather" binding:"required"`
-	}
 	data := &coordisdb.Coordi{}
 
 	if err := c.ShouldBindJSON(&data); err != nil {

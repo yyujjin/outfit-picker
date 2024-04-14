@@ -11,16 +11,17 @@ import (
 )
 
 type User struct {
-	Id uint        
-	UserId string         
-	Password string        
-	Name string          
-	Birthday string    
-	Tel string 
-	Gender  int   
+
+	Id uint `json:"id"`
+	UserId string `json:"userId"`
+	Password string `json:"password"`
+	Name string `json:"name"`
+	Birthday string `json:"birthday"`
+	Tel string `json:"tel"`
+	Gender int `json:"gender"`
   }
 
-  func ConnectDB() (*gorm.DB,error) {
+  func ConnectDB() (*gorm.DB, error) {
 	password := os.Getenv("DB_password")
 	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker", password)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -39,7 +40,7 @@ func GetUserCount(userId string) int64 {
 	}
 
 	var count int64
-	db.Model(&User{}).Table("user").Where("user_id = ?", userId).Count(&count)
+	db.Model(&User{}).Table("user").Where("userId = ?", userId).Count(&count)
 
 	return count
 }
@@ -74,7 +75,7 @@ func GetPassword(userId string) (*gorm.DB,string) {
 
 	var userPass string
 
-	result := db.Model(&User{}).Where("user_id = ?", userId).Select("password").Find(&userPass);
+	result := db.Model(&User{}).Where("userId = ?", userId).Select("password").Find(&userPass);
 
 fmt.Println(userPass)
 	return result,userPass
