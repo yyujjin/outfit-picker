@@ -61,18 +61,19 @@ func SelectCoordis(first string)([]Coordi) {
 		log.Fatal(err)
 	}
 	coordis := []Coordi{}
-	rows, err := db.Model(&Coordi{}).Where("weather=?",0).Rows()
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-	// rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
+	db.Raw("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;",first, first).Scan(&coordis)
+	// rows, err := db.Model(&Coordi{}).Where("weather=?",0).Rows()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer rows.Close()
+	// // rows, err := db.Query("SELECT * FROM coordi WHERE date >= ? and date < DATE_ADD(?, INTERVAL 1 MONTH) ORDER BY id ASC;", first, first)
 
-	for rows.Next() {
-		var coordi Coordi
-		db.ScanRows(rows,&coordi) //coordi라는 변수에 내가 보낸 구조체 형식대로 저장해
-		coordis = append(coordis,Coordi(coordi))
-	}
+	// for rows.Next() {
+	// 	var coordi Coordi
+	// 	db.ScanRows(rows,&coordi) //coordi라는 변수에 내가 보낸 구조체 형식대로 저장해
+	// 	coordis = append(coordis,Coordi(coordi))
+	// }
 
 	fmt.Println(coordis)
 
