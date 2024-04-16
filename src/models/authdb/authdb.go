@@ -13,7 +13,7 @@ import (
 type User struct {
 
 	Id uint `json:"id"`
-	UserId string `json:"userId"`
+	UserId string `json:"userId" gorm:"column:userId"`
 	Password string `json:"password"`
 	Name string `json:"name"`
 	Birthday string `json:"birthday"`
