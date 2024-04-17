@@ -15,9 +15,15 @@
 
 ##### Request
 
-> | id(유저아이디)**필수** |  password(유저 비밀번호)**필수**  |  name(유저 이름)**필수**  | birthday(유저 생일)**필수**  | phoneNumber(유저 전화번호)**필수** | gender(유저 성별)
-> |----------|----------|-----------|----------|----------|-----------|
-> | string     |  string | string   |string     |  string | int (*0 = male,1 = female*)  |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id|필수|string|유저 아이디|
+> |password|필수|string|유저 비밀번호|
+> |name|필수|string|유저 이름|
+> |birthday|필수|string|유저 생일|
+> |phoneNumber|필수|string|유저 전화번호|
+> |gender|선택|int|유저 성별 ( **default** 0 = male  , 1 = female)|
+
 
 ##### Example JSON
 ```json
@@ -57,9 +63,10 @@
 
 ##### Request
 
-> | id (유저아이디) **필수** |  password (유저 비밀번호) **필수** |  
-> |----------|----------|
-> | string     |  string |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id|필수|string|유저 아이디|
+> |password|필수|string|유저 비밀번호|
 
 ##### Example JSON
 ```json
@@ -94,18 +101,24 @@
 ##### Description
 자신의 옷장에 추가한 전체 의류 아이템을 확인합니다.
 
+##### Request
+> N/A
+
 ##### Responses
 
-> | itemId (아이템 아이디)  |  itemName (아이템의 이름)    | category   (아이템 분류) | image (아이템 사진) | 
-> |----------|----------|-----------|----------|
-> |int| string     |  string | string   |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id||int|아이템 아이디|
+> |name||string|아이템 이름|
+> |category||string|아이템 분류|
+> |image||string|아이템 사진|
 
 ##### Example JSON
 ```json
 [
   {
-    "itemId":1,
-    "itemName":"기모후드",
+    "id":1,
+    "name":"기모후드",
     "category":"아우터",
     "image":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png"
   }
@@ -122,9 +135,11 @@
 
 ##### Request
 
-> | item name (추가할 아이템의 이름)  |  category (아이템의 분류)    | image    (아이템 사진 *url*) | 
-> |----------|----------|-----------|
-> | string     |  string | string   |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |itemName|필수|string|아이템 이름|
+> |cagegory|필수|string|아이템 분류|
+> |image|필수|string|아이템 사진|
 
 ##### Example JSON
 ```json
@@ -156,9 +171,9 @@
 
 ##### Request
 
-> | id (제거할 아이템 번호) |
-> |----------|
-> | semantics |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id|필수|semantics|제거할 아이템 번호|
 
 ##### Example URL
 ```HTTP
@@ -194,9 +209,10 @@ http://localhost:8080/api/items/4
 
 ##### Request
 
-> | month (검색할 월)  |  year (검색할 연도)   | 
-> |----------|----------|
-> |query (*1월은 "01",12월은 "12"*)| query (*"2024", "2025"*) |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |month|필수|query|검색할 월 (*1월은 "01",12월은 "12"*) |
+> |year|필수|query|검색할 연도 (*"2024", "2025"*)|
 
 ##### Example URL
 ```HTTP
@@ -209,9 +225,14 @@ http://localhost:8080/api/coordis?year=2024&month=04
 > |--------------------------|-----------------------------------|-------------------------|
 > | `200`         |        ||
 
->| id (목록 번호)  |  data (날짜)    | photo  (코디 사진) | temperature (기온) | weather (날씨)|
-> |----------|----------|-----------|----------|----------|
-> |int| string     |  string |int   |int|
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id||int|목록 번호|
+> |data||string|날짜|
+> |image||string|코디 사진|
+> |temperature||int|기온|
+> |weather||int|날씨|
+
 
 ##### Example JSON
 ```json
@@ -219,14 +240,14 @@ http://localhost:8080/api/coordis?year=2024&month=04
   {
     "id":1,
     "date":"2024-03-18",
-    "photo":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
+    "image":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
     "temperature" :10,
     "weather" :1
   },
   {
     "id":6,
     "date":"2024-03-24",
-    "photo":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
+    "image":"https://img.icons8.com/?size=80&id=mw8n5jxdoKlM&format=png",
     "temperature":15,
     "weather":0
   }
@@ -251,9 +272,13 @@ http://localhost:8080/api/coordis?year=2024&month=04
 
 ##### Request
 
-> | data (날짜) **필수** |  image (코디 사진) **필수** |  temperature (기온) | weather (날씨) **필수** |
-> |----------|----------|-----------|----------|
-> | string     |  string | int   |int (*0 = 맑음, 1 = 흐림, 2 = 비, 3 = 눈*)  |
+
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |date|필수|string|날짜|
+> |image|필수|string|코디 사진|
+> |temperature|선택|int|기온|
+> |weather|필수|int|날씨 (*0 = 맑음, 1 = 흐림, 2 = 비, 3 = 눈*)|
 
 ##### Example JSON
 ```json
@@ -285,11 +310,13 @@ http://localhost:8080/api/coordis?year=2024&month=04
 ##### Description
 사용자의 코디 기록에서 해당하는 정보를 삭제합니다.
 
+
+
 ##### Request
 
-> | id (제거할 코디 번호) |
-> |----------|
-> | semantics |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id|필수|semantics|제거할 코디 번호 |
 
 ##### Example URL
 ```HTTP
@@ -323,11 +350,16 @@ http://localhost:8080/api/coordis/4
 ##### Description
 카테고리 리스트를 전달합니다.
 
+##### Requests
+
+> N/A
+
 ##### Responses
 
-> | id (카테고리 번호)  |  name (카테고리이름)    | 
-> |----------|----------|
-> |int| string     |
+> |name|type|data type|description|
+>|---------|--------|----------|-----------|
+> |id|필수|int|카데고리 번호|
+> |name|필수|string|카데고리 이름|
 
 ##### Example JSON
 ```json
