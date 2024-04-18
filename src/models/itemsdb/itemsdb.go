@@ -28,14 +28,14 @@ func ConnectDB() (*gorm.DB,error) {
 	return db,err
 }
 
-func InserItem(id uint, name string, category int, image string) error {
+func InserItem(data Closet) error {
 
 	db,err := ConnectDB()
 	if err != nil {
 		return err
 	}
-
-	closet := Closet{id,name,category,image}
+//closet = 구조체객체
+	closet := data
 	result := db.Create(&closet)
 
 	if result.Error != nil {

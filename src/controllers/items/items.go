@@ -24,7 +24,7 @@ func AddItem (c *gin.Context){
 	}
 	//클라이언트에서 itmeID를 안넘겨줘도 (=기본값0)
 	//GORM에서 ID는 프라이머리키라서 자동으로 DB에 등록됨. 
-	err := itemsdb.InserItem(addItem.Id,addItem.Name, addItem.Category, addItem.Image)
+	err := itemsdb.InserItem(addItem)
 
 	if err != nil {
 		log.Fatal(err)
