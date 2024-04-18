@@ -6,11 +6,11 @@ import (
 	"outfit-picker/src/controllers/coordis"
 	"outfit-picker/src/controllers/items"
 	"outfit-picker/src/controllers/users"
+	"outfit-picker/src/controllers/weather"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
-
 
 // 코드 구조
 // 1. 컨트롤러 2. 서비스 3. 모델
@@ -44,6 +44,8 @@ r.POST("/api/users", users.SignUp)
 
 //카테고리 리스트를 프론트로 전달 
 r.GET("/api/categories", categories.GetCategories)
+
+r.GET("/api/weather", weather.GetWeather)
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
