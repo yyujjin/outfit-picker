@@ -36,7 +36,7 @@ func SelectCategories() []Category{
 	}
 	categoryList := []Category{}
 	
-	db.Raw("SELECT * FROM categorylist ORDER BY id ASC;").Scan(&categoryList)
-
+	db.Model(&Category{}).Table("categoryList").Order("id asc").Find(&categoryList)
+	
 	return	categoryList
 }
