@@ -22,7 +22,8 @@ func LogCoordis(c *gin.Context) {
 		return
 	}
 	
-	err := coordisdb.InsertCoordi(data.Id,data.Date,data.Photo,data.Temperature,data.Weather)
+	err := coordisdb.InsertCoordi(*data)
+
 	fmt.Println(err)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

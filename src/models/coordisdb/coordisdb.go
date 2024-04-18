@@ -31,15 +31,15 @@ func ConnectDB() (*gorm.DB,error) {
 }
 
 
-
-func InsertCoordi(id uint,date string, photo string, temperature int, weather *int) error {
+//data 구조체 넘겼어. 
+func InsertCoordi(data Coordi) error {
 
 	db,err := ConnectDB()
 	if err != nil {
 		return err
 	}
 
-	coordi := Coordi{id,date,photo,temperature,weather}
+	coordi := data
 	
 	//coordi에 저장돼 있는 데이터로 db를 만들겠다. 
 	result := db.Create(&coordi)
