@@ -52,8 +52,8 @@ func GetCoordiLogs(c *gin.Context) {
 	first := year + "-" + month + "-" + "01"
 	fmt.Println(first)
 
-	getCoordis := coordisdb.SelectCoordis(first) 
-	if len(getCoordis) == 0 {
+	coordis := coordisdb.SelectCoordis(first) 
+	if len(coordis) == 0 {
 			c.JSON(http.StatusNotFound, gin.H{
 			"status":  "error",
 			"message": "해당하는 날짜의 코디가 없습니다.",
@@ -61,7 +61,7 @@ func GetCoordiLogs(c *gin.Context) {
 		return
 	}
 	
-	c.IndentedJSON(http.StatusOK,getCoordis)
+	c.IndentedJSON(http.StatusOK,coordis)
 }
 
 //사용자의 코디 기록에서 해당하는 정보를 삭제하는 API
