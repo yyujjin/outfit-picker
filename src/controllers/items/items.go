@@ -12,14 +12,7 @@ import (
 //프론트엔드에서 사용자의 옷장에 아이템을 추가하기 위한 API
 func AddItem (c *gin.Context){
 
-	type postItem struct {
-		ItemId int `json:"itemId"`
-		ItemName string `json:"itemName"`
-		Category int    `json:"category"`
-		Image    string `json:"image"`
-	}
-
-	var addItem postItem
+	var addItem itemsdb.Closet
 
 	if err := c.BindJSON(&addItem); err != nil {
 		fmt.Println(err)
@@ -29,8 +22,9 @@ func AddItem (c *gin.Context){
 		})
 		return
 	}
-	
-	err := itemsdb.InserItem(addItem.ItemName, addItem.Category, addItem.Image)
+	//클라이언트에서 itmeID를 안넘겨줘도 (=기본값0)
+	//GORM에서 ID는 프라이머리키라서 자동으로 DB에 등록됨. 
+	err := itemsdb.InserItem(addItem)
 
 	if err != nil {
 		log.Fatal(err)
@@ -45,42 +39,14 @@ func AddItem (c *gin.Context){
 //자신의 옷장에 추가한 전체 의류 아이템을 확인하기 위한 API	
 func GetClothingItems(c *gin.Context) {
 
-	type getItem struct {
-		Id int `json:"id"`
-		Name string `json:"name"`
-		Category string `json:"category"`
-		Image string `json:"image"`
-	}
-
-	
-	rows, err := itemsdb.SeleteItems() 
+	closets, err := itemsdb.SeleteItems() 
 
 	if err != nil {
 		log.Fatal(err)
 	}
-	
-	defer rows.Close() 
-
-	item := []getItem{}
-
-	for rows.Next() {
-
-		var id int
-		var name string
-		var category string	
-		var image string
-
-		err := rows.Scan(&id, &name, &category, &image)
-		if err != nil {
-			log.Fatal(err)  
-		}
-		
-		item = append(item, getItem{id, name, category, image})
-		fmt.Println(id, name, category, image)
-	}
 
 	c.IndentedJSON(http.StatusOK, gin.H{
-		"data": item,
+		"data": closets,
 	})
 }
 
@@ -99,12 +65,20 @@ func DeleteItem(c *gin.Context) {
 		return
 	}
 
-	err = itemsdb.DeleteItem(id)
+	result := itemsdb.DeleteItem(uint(id))
 
-	if err != nil {
+	if result.Error != nil {
 		log.Fatal(err)
 	}
 
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"status":  "error",
+			"message": "해당하는 ID를 찾을 수 없습니다.",
+		})
+		return
+	}
+	
 	c.IndentedJSON(http.StatusOK, "삭제가 완료되었습니다!")
 
 }

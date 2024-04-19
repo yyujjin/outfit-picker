@@ -1,20 +1,19 @@
 package auth
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"outfit-picker/src/models/authdb"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 func Login(c *gin.Context) {
-	type login struct {
-		Id       string `json:"id" binding:"required"`
-		Password string `josn:"password" binding:"required"`
-	}
 
-	var data login
+	var data authdb.User
 
 	if err := c.BindJSON(&data); err != nil {
 		// fmt.Println(err)
@@ -25,13 +24,14 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	userPassword,err1 := authdb.GetPassword(data.Id)
+	result,userPassword := authdb.GetPassword(data.UserId)
 
-	if err1 != nil {
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"status":  "error",
 			"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
 		})
+		fmt.Println("찾는 행 없음 ")
 		return
 	}
 
@@ -40,6 +40,7 @@ func Login(c *gin.Context) {
 			"status":  "error",
 			"message": "잘못된 로그인 정보입니다. 다시 시도해주세요.",
 		})
+		fmt.Println("로그인 실패")
 		return
 	}
 

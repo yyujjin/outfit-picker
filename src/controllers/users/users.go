@@ -12,16 +12,7 @@ import (
 //회원가입 API
 func SignUp(c *gin.Context) {
 	
-	type signup struct {
-		Id string `json:"id" binding:"required"` 
-		Password string `json:"password" binding:"required"` 
-		Name string `json:"name" binding:"required"` 
-		Birthday string `json:"birthday" binding:"required"`  
-		PhoneNumber string `json:"phoneNumber" binding:"required"` 
-		Gender int `json:"gender" ` 
-	}
-
-	var data signup
+	var data authdb.User
 
 	if err := c.BindJSON(&data); err != nil {
 		fmt.Println(err)
@@ -32,7 +23,7 @@ func SignUp(c *gin.Context) {
 		return
 	}
 
-	count := authdb.GetUserCount(data.Id)
+	count := authdb.GetUserCount(data.UserId)
 
 	if count > 0 {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -50,13 +41,14 @@ func SignUp(c *gin.Context) {
 	}
 	fmt.Println(string(hash))
 	
-	err := authdb.InsertUser(data.Id, hash, data.Name, data.Birthday, data.PhoneNumber, data.Gender)
+	err := authdb.InsertUser(data.Id,data.UserId,[]byte(hash), data.Name, data.Birthday, data.Tel, data.Gender)
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
 			"message": "서버에서 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.",
 		})
+		fmt.Println("여기서 에러발생")
 		return
 	}
 	c.IndentedJSON(http.StatusOK, data)
