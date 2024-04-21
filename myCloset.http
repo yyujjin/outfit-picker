@@ -54,3 +54,6 @@ POST  http://localhost:8080/api/login
   "Id" : "O",
   "Password" : "GOING"
 }
+
+###
+GET http://localhost:8080/api/weather

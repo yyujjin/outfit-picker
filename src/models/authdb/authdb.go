@@ -23,7 +23,8 @@ type User struct {
   }
 
 func GetUserCount(userId string) int64 {
-	password := os.Getenv("DB_password")
+	
+	password := os.Getenv("DB_password")//환경변수를 불러오는 함수
 	dsn := fmt.Sprintf("root:%s@tcp(127.0.0.1:3306)/outfit-picker?charset=utf8mb4&parseTime=True&loc=Local",password)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	

@@ -4,13 +4,37 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 //c에 클라이언트가 요청한 정보가 다 담겨있고 함수안에서 제서
 //라우터를 만들면 자동으로 파라미터를 넘겨받게 설계되어있음.
+
+//환경변수로 빼는건 중요한거만 빼기
+
+func GetUrl()string {
+	serviceKey := os.Getenv("serviceKey")
+	numOfRows := 10
+	pageNo := 1
+	base_date := "20240421" //보통 날짜는 스트링으로 함
+	base_time := "0500" //0으로 시작하는 숫자는 없어서 스트링임
+	nx := 55
+	ny := 127
+	dataType := "JSON"
+	//변수타입 맞춰서 넣기 %s %c
+
+	//go규칙 : 파라미터 전달 시 괄호가 밑에 있으면 마지막에 쉼표를 넣어주기 
+	return fmt.Sprintf(
+		"http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?&serviceKey=%s&numOfRows=%d&pageNo=%d&base_date=%s&base_time=%s&nx=%d&ny=%d&dataType=%s",
+		serviceKey,numOfRows,pageNo,base_date,base_time,nx,ny,dataType,
+	)
+}
+
 func GetWeather(c *gin.Context) {  
 
 	  
@@ -26,7 +50,7 @@ func GetWeather(c *gin.Context) {
 	  }
 
 	  type Items struct {
-		Item `json:"item"`
+		Item []Item `json:"item"`
 	  }
 
 	  type Body struct {
@@ -50,23 +74,27 @@ func GetWeather(c *gin.Context) {
 	  type Weather struct {
 		Response `json:"response"`
 	  }
+	
+//환경변수를 불러오는 함수-> 코드내에 변수 만들어서 불러옴 
+//메인 을 기준으로 생각해서 밖으로 나가면됨. 
+	err := godotenv.Load("../.env")
 
-
-	  
-
-
- //API를 받아오기 위한 3단계
-
-	// 1. http.Get() 메서드는 쉽게 웹 페이지나 웹 데이타들 가져오는데 사용된다.
-	resp, err := http.Get("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst?serviceKey=FkrjO6uyl2g8GMNLJMM5IMx5DOwDib0Zz8Ol4gsNyIzf4m1y9AeNSfQnSAbUZ%2Btpu%2FBxxz%2BMimxAkXvjgRg68w%3D%3D&numOfRows=10&pageNo=1&base_date=20240419&base_time=0500&nx=55&ny=127&dataType=JSON")
-
+	if err != nil {
+        log.Fatal("Error loading .env file")
+    }
+	
+	// fmt.Println("env [serviceKey]:", os.Getenv("serviceKey"))
+	// 1. sprintf 함수를 이용해서 serviceKey 합치기
+	// 2. 합친걸 url변수에 담고
+	// 3. http.Get에 유알엘 변수 넣기
+	//변수랑 문자랑 합쳐주는 함수 ->반환값은 스트링
+	
+	resp, err := http.Get(GetUrl())
     if err != nil {
         panic(err)
     }
 	defer resp.Body.Close()
 
-
-// 2. 받은 결과가 BODY로 넘어오니까 BODY에서 데이터를 읽는 작업
     data, err := io.ReadAll(resp.Body)
     if err != nil {
         panic(err)
@@ -74,7 +102,6 @@ func GetWeather(c *gin.Context) {
 
     fmt.Printf("%s\n", string(data))
 
- // 3. 읽어온 BODY의 데이터를 구조체에 넣는 과정  
 	var w Weather
     err = json.Unmarshal(data, &w)
     if err != nil {
