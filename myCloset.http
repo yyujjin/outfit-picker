@@ -29,7 +29,7 @@ POST http://localhost:8080/api/coordis
 //weather 이 0이 되면 기본값으로 인식이 돼서 에러가 발생함 
 //그럼 0 이상의 숫자를 입력하도록 설정해야하납? 
 ###
-GET http://localhost:8080/api/coordis?year=2023&month=04
+GET http://localhost:8080/api/coordis?year=2024&month=05
 
 ###
 POST http://localhost:8080/api/users
