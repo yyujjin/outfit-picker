@@ -8,15 +8,18 @@ import (
 	"net/http"
 	"os"
 
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
 
 func GetUrl()string {
+	getTime := time.Now() //현재날짜 가져와서 변수에 저장
 	serviceKey := os.Getenv("serviceKey")
 	numOfRows := 10
 	pageNo := 1
-	base_date := "20240421" 
+	base_date := getTime.Format("20060102")//fotmat값이 스트
 	base_time := "0500" 
 	nx := 55
 	ny := 127
