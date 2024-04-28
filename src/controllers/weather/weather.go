@@ -7,8 +7,9 @@ import (
 	"log"
 	"net/http"
 	"os"
-
 	"time"
+
+	// "time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -17,10 +18,10 @@ import (
 func GetUrl()string {
 	getTime := time.Now() //현재날짜 가져와서 변수에 저장
 	serviceKey := os.Getenv("serviceKey")
-	numOfRows := 10
+	numOfRows := 200
 	pageNo := 1
-	base_date := getTime.Format("20060102")//fotmat값이 스트
-	base_time := "0500" 
+	base_date := getTime.Format("20060102")//fotmat 반환값이 스트링이라 바로 변수에 저장 
+	base_time := "0200" 
 	nx := 55
 	ny := 127
 	dataType := "JSON"
@@ -95,6 +96,34 @@ func GetWeather(c *gin.Context) {
     if err != nil {
         panic(err)
     }
-	c.JSON(http.StatusOK, w)
+	// 하늘상태(SKY) 코드 : 맑음(1), 구름많음(3), 흐림(4)
+	fmt.Println("하늘상태",w.Item[5].FcstValue)
+	// 강수형태(PTY) 코드 : 없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4) 
+	fmt.Println("강수",w.Item[6].FcstValue)
+	//TMN 일 최저기온 
+	fmt.Println("최저기온",w.Item[48].FcstValue)
+	//TMX 일 최고기온
+	fmt.Println("최고기온",w.Item[157].FcstValue)
+	
+	c.JSON(http.StatusOK, gin.H {
+		"하늘 상태" : w.Item[5].FcstValue,
+		"강수 형태" : w.Item[6].FcstValue,
+		"최저 기온" : w.Item[48].FcstValue,
+		"최고 기온" : w.Item[157].FcstValue,
+	})
+
+
+	//최저기온, 최고기온 찾는 코드 
+	// var tmni,tmxi int
+	// for i := range w.Item {
+	// 	if w.Item[i].Category=="TMN"{
+	// 		tmni = i
+	// 	}
+	// 	if w.Item[i].Category=="TMX" {
+	// 		tmxi = i
+	// 	}	
+	// }
+	// fmt.Printf("tmni : %d , tmxi : %d",tmni,tmxi)
+	
 }
 
