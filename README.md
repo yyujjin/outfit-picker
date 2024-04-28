@@ -350,3 +350,35 @@ http://localhost:8080/api/coordis/4
 </details>
 
 ------------------------------------------------------------------------------------------
+## weather
+
+#### Endpoint
+```http
+/api/weatehrs
+```
+
+<details>
+ <summary>-<code>GET</code> </summary>
+
+##### Description
+날씨 정보를 전달합니다.
+
+##### Responses
+
+> |skyStatus (하늘 상태)   |  precipitationType (강수 형태)    |minTemperature (최저 기온)   |maxTemperatu (최고 기온)    | 
+> |----------|----------|----------|----------|
+> |string(*맑음(1), 구름많음(3), 흐림(4)*)| string (*없음(0), 비(1), 비/눈(2), 눈(3), 소나기(4)*)    | string     | string     |
+
+##### Example JSON
+```json
+{
+  "skyStatus": "1",
+  "precipitationType": "0",
+  "minTemperature": "10.0",
+  "maxTemperature": "26.0",
+}
+```
+
+</details>
+
+------------------------------------------------------------------------------------------

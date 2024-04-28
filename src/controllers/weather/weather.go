@@ -32,6 +32,9 @@ func GetUrl()string {
 	)
 }
 
+// 리드미에 날씨 주는 api 작성 
+// post 코디에 최고 최저 기온 저장하는 구조체 , 변수 생성
+//db에도 추가해야함 
 func GetWeather(c *gin.Context) {  
 
 	  
@@ -106,10 +109,10 @@ func GetWeather(c *gin.Context) {
 	fmt.Println("최고기온",w.Item[157].FcstValue)
 	
 	c.JSON(http.StatusOK, gin.H {
-		"하늘 상태" : w.Item[5].FcstValue,
-		"강수 형태" : w.Item[6].FcstValue,
-		"최저 기온" : w.Item[48].FcstValue,
-		"최고 기온" : w.Item[157].FcstValue,
+		"skyStatus" : w.Item[5].FcstValue,
+		"precipitationType" : w.Item[6].FcstValue,
+		"minTemperature" : w.Item[48].FcstValue,
+		"maxTemperature" : w.Item[157].FcstValue,
 	})
 
 

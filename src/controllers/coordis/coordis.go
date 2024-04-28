@@ -29,6 +29,7 @@ func LogCoordis(c *gin.Context) {
 		return
 	}
 	
+
 	err := coordisdb.InsertCoordi(data.Date,data.Photo,data.Temperature,*data.Weather)
 
 	if err != nil {

@@ -45,7 +45,8 @@ r.POST("/api/users", users.SignUp)
 //카테고리 리스트를 프론트로 전달 
 r.GET("/api/categories", categories.GetCategories)
 
-r.GET("/api/weather", weather.GetWeather)
+//
+r.GET("/api/weathers", weather.GetWeather)
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
